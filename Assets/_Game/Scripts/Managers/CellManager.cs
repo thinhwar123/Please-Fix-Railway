@@ -31,9 +31,9 @@ public class CellManager : Singleton<CellManager>
     {
         m_CurrentWidth = width;
         m_CurrentHeight = height;
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 10; i++)
         {
-            for (int j = 0; j < 20; j++)
+            for (int j = 0; j < 10; j++)
             {
                 GetCell(j, i).gameObject.SetActive(i < height && j < width);
             }

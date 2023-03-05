@@ -24,6 +24,8 @@ public class LevelDataConfig : GlobalConfig<LevelDataConfig>
         TextAsset textAsset = m_LevelDatas.FirstOrDefault(textAsset => textAsset.name == string.Format("Data_Chap{0}_Level{1}", chap, level));
         if (textAsset == null) return "";
         return textAsset.text;
+
+
     }
 
     #region Editor
@@ -44,10 +46,13 @@ public class LevelDataConfig : GlobalConfig<LevelDataConfig>
     public void UpdateLevelDataConfig()
     {
         EditorUtility.SetDirty(this);
-        this.m_LevelDatas = AssetDatabase.FindAssets("t:TextAsset ", new string[] { "Assets/_Game/ScriptableObjects/SaveFiles" })
+        this.m_LevelDatas = AssetDatabase.FindAssets("t:TextAsset ", new string[] { "Assets/_Game/Datas/LevelDatas" })
             .Select(guid => AssetDatabase.LoadAssetAtPath<TextAsset>(AssetDatabase.GUIDToAssetPath(guid)))
             .ToArray();
         this.m_LevelDatas.Sort((x, y) => x.name.CompareTo(y.name));
+
+        AssetDatabase.Refresh();
+        AssetDatabase.SaveAssets();
     }
 #endif
     #endregion
