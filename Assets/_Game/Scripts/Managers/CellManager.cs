@@ -41,7 +41,7 @@ public class CellManager : Singleton<CellManager>
     }
     public Cell GetCell(int x, int y)
     {
-        return m_CellList[x + y * 20];
+        return m_CellList[x + y * 10];
     }
     public Cell GetCell(Coordinates coordinates)
     {
@@ -66,9 +66,9 @@ public class CellManager : Singleton<CellManager>
         m_CellTransform = transform.FindChildOrCreate("Cell");
         m_EntityTransform= transform.FindChildOrCreate("Enity");
 
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 10; i++)
         {
-            for (int j = 0; j < 20; j++)
+            for (int j = 0; j < 10; j++)
             {
                 Cell tempCell = PrefabUtility.InstantiatePrefab(m_CellPrefab, m_CellTransform) as Cell;
                 EditorUtility.SetDirty(tempCell);
