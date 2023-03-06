@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Cell : MonoBehaviour
@@ -43,6 +45,24 @@ public class Cell : MonoBehaviour
         entity.Transform.position = Transform.position;
         entity.Transform.rotation = rotation;
         entity.Coordinates = Coordinates;
-    } 
-    
+    }
+
+    //Link
+    [SerializeField] AnimationCurve curveY;
+    float time = -1f;
+    private float speed = 1.5f;
+
+    internal void OnActive()
+    {
+        time = 0;
+    }
+
+    private void FixedUpdate()
+    {
+        if (time >= 0f)
+        {
+            time += Time.fixedDeltaTime * speed;
+            transform.position = new Vector3(transform.position.x, curveY.Evaluate(time), transform.position.z);
+        }
+    }
 }
