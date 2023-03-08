@@ -16,7 +16,7 @@ public class AnimTest : MonoBehaviour
     [SerializeField] float speed = 10.0f;
     [SerializeField] float time;
     float radius = 0;
-    Cell initCell;
+    Vector3 startPoint;
 
     bool active = false;
 
@@ -43,13 +43,13 @@ public class AnimTest : MonoBehaviour
             radius += Time.fixedDeltaTime * speed;
             time += Time.fixedDeltaTime;
 
-            neiboors = GetNeiboor(initCell.transform.position, radius);
+            neiboors = GetNeiboor(startPoint, radius);
             for (int i = 0; i < neiboors.Length; i++)
             {
                 if (!approves.Contains(neiboors[i]))
                 {
                     approves.Add(neiboors[i]);
-                    dict[neiboors[i]].OnActive_1();
+                    //dict[neiboors[i]].OnActive_1();
                     action?.Invoke(i);
                 }
             }
@@ -61,7 +61,7 @@ public class AnimTest : MonoBehaviour
         return Physics.OverlapSphere(position, radius);
     }
 
-    private void Reset()
+    private void ActiveWave()
     {
         for (int i = 0; i < 10; i++)
         {
@@ -80,18 +80,60 @@ public class AnimTest : MonoBehaviour
     [Button]
     public void StartAnim_1()
     {
-        initCell = this.cells[0, 0];
+        startPoint = new Vector3(-0.5f, 0, -0.5f);
         action = (i) => dict[neiboors[i]].OnActive_1();
         speed = 20;
-        Reset();
+        ActiveWave();
     } 
     
     [Button]
     public void StartAnim_2()
     {
-        initCell = this.cells[0, 0];
+        startPoint = new Vector3(-0.5f, 0, -0.5f);
         action = (i) => dict[neiboors[i]].OnActive_2();
         speed = 12;
-        Reset();
+        ActiveWave();
+    }
+    
+
+    [Button]
+    public void StartAnim_3()
+    {
+        startPoint = cells[4, 4].Transform.position;
+        action = (i) => dict[neiboors[i]].OnActive_1();
+        speed = 12;
+        ActiveWave();
+    }
+    
+    [Button]
+    public void StartAnim_4()
+    {
+        //List<Cell> evenCells = new List<Cell>();
+        //List<Cell> oddCells = new List<Cell>();
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                if ((i + j) % 2 == 0)
+                {
+                    //evenCells.Add(cells[i, j]);
+                }
+                else
+                {
+                    //oddCells.Add(cells[i, j]);
+                    cells[i, j].OnActive_3();
+                }
+            }
+        }
+    }  
+
+
+    [Button]
+    public void StartAnim_5()
+    {
+        startPoint = cells[4, 4].Transform.position;
+        action = (i) => dict[neiboors[i]].OnActive_1();
+        speed = 12;
+        ActiveWave();
     }
 }

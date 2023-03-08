@@ -549,7 +549,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98e1410cba1a1b4e8331e198b51ecfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Transform: {fileID: 917314409261082299}
   m_Coordinates:
     x: 0
     y: 0

@@ -13,8 +13,8 @@ public static class CellExtension
         float target_1 = cell.Transform.position.y + 1.5f;
         float target_2 = cell.Transform.position.y - 1.5f;
         float target_3 = cell.Transform.position.y;
-        cell.Transform.DOMoveY(target_1, .3f).OnComplete(
-            () => cell.Transform.DOMoveY(target_2, .5f).OnComplete(() =>
+        cell.Transform.DOMoveY(target_1, .3f).SetEase(Ease.Linear).OnComplete(
+            () => cell.Transform.DOMoveY(target_2, .5f).SetEase(Ease.Linear).OnComplete(() =>
             {
                 cell.OnChange();
                 cell.Transform.DOMoveY(target_3, .5f);
@@ -44,5 +44,25 @@ public static class CellExtension
             });
     }
 
+    public static void OnActive_3(this Cell cell)
+    {
+        cell.Transform.DOMoveY(-2, 0.5f).OnComplete(()=>
+            {
+                cell.OnChange();
+                cell.Transform.DOMoveY(0, 0.5f).SetDelay(0.5f);
+            });
+    }
+
+    public static void OnActive_4(this Cell cell)
+    {
+        //Vector3 target = 
+
+        //cell.Transform.DOMoveY(-2, 0.5f).OnComplete(()=>
+        //    {
+        //        cell.OnChange();
+        //        cell.Transform.DOMoveY(0, 0.5f).SetDelay(0.5f);
+        //    });
+
+    }
 
 }
