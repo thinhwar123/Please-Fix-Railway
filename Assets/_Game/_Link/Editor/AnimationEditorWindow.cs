@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -62,6 +63,11 @@ public class AnimationEditorWindow : EditorWindow
             {
                 SetTransformProperty(gameObjects[i].name, gameObjects[i].transform, time);
             }
+
+            time += 0.1f;
+            time = (float)Math.Round(time, 1);
+
+            Debug.Log("Done - " + time);
         }
 
         DrawSelectingObject();

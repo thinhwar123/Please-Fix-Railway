@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,22 +48,27 @@ public class Cell : MonoBehaviour
         entity.Coordinates = Coordinates;
     }
 
+
+    public Material[] material;
+    public Renderer renderer;
     //Link
-    [SerializeField] AnimationCurve curveY;
-    float time = -1f;
-    private float speed = 1.5f;
-
-    internal void OnActive()
+    public void OnStart()
     {
-        time = 0;
+        renderer.material = material[0];
     }
 
-    private void FixedUpdate()
+    public void OnChange()
     {
-        if (time >= 0f)
-        {
-            time += Time.fixedDeltaTime * speed;
-            transform.position = new Vector3(transform.position.x, curveY.Evaluate(time), transform.position.z);
-        }
+        renderer.material = material[1];
     }
+
+
+    //private void FixedUpdate()
+    //{
+    //    if (time >= 0f)
+    //    {
+    //        time += Time.fixedDeltaTime * speed;
+    //        transform.position = new Vector3(transform.position.x, curveY.Evaluate(time), transform.position.z);
+    //    }
+    //}
 }

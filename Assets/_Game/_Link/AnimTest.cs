@@ -1,21 +1,26 @@
 using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AnimTest : MonoBehaviour
 {
-    [ShowInInspector] public Cell[,] cells = new Cell[10,10];
+    Cell[,] cells = new Cell[10,10];
     Dictionary<Collider, Cell> dict = new Dictionary<Collider, Cell>();
-    [SerializeField] float time;
     List<Collider> approves = new List<Collider>();
+
     Collider[] neiboors;
     [SerializeField] float speed = 10.0f;
+    [SerializeField] float time;
     float radius = 0;
+    Cell initCell;
 
-    [Button]
-    public void OnInit()
+    bool active = false;
+
+    public void Start()
     {
         Cell[] cells = FindObjectsOfType<Cell>();
 
@@ -23,98 +28,70 @@ public class AnimTest : MonoBehaviour
         {
             this.cells[cells[i].Coordinates.x, cells[i].Coordinates.y] = cells[i];
             dict.Add(cells[i].GetComponent<Collider>(), cells[i]);
+
+            this.cells[cells[i].Coordinates.x, cells[i].Coordinates.y] = cells[i];
         }
+
     }
 
-    [Button]
-    public void Active()
-    {
-        active = true;
-    }
-
-    [Button]
-    public void Continue()
-    {
-        targetTime += 0.1f;
-        active = true;
-        Time.timeScale = 1;
-    }
-
-    private IEnumerator IEActive(Cell cell)
-    {
-
-        while (radius < 15)
-        {
-            neiboors = GetNeiboor(cell.transform.position, radius);
-            for (int i = 0; i < neiboors.Length; i++)
-            {
-                if (!approves.Contains(neiboors[i]))
-                {
-                    approves.Add(neiboors[i]);
-                    dict[neiboors[i]].OnActive();
-                }
-            }
-            
-            radius += Time.deltaTime * speed;
-            time += Time.deltaTime;
-            yield return null; 
-        }
-    }
-
-    public float targetTime;
-    bool active = false;
+    private UnityAction<int> action;
 
     private void FixedUpdate()
     {
-        if (active)
+        if (active) 
         {
             radius += Time.fixedDeltaTime * speed;
             time += Time.fixedDeltaTime;
 
-            neiboors = GetNeiboor(cells[0, 0].transform.position, radius);
+            neiboors = GetNeiboor(initCell.transform.position, radius);
             for (int i = 0; i < neiboors.Length; i++)
             {
                 if (!approves.Contains(neiboors[i]))
                 {
                     approves.Add(neiboors[i]);
-                    dict[neiboors[i]].OnActive();
+                    dict[neiboors[i]].OnActive_1();
+                    action?.Invoke(i);
                 }
-            }
-
-            if (time >= targetTime)
-            {
-                active = false;
-                Time.timeScale = 0f;
-                Continue();
             }
         }
     }
-
-    private List<Cell> GetNeiboor(int x,int y)
-    {
-        List<Cell> list = new List<Cell>();
-
-        for (int i = x - 1; i <= x + 1; i++)
-        {
-            for (int j = y - 1; j <= y + 1; j++)
-            {
-                if (i < 0 || j < 0 || i >= 10 || j >= 10 || (i == x && j == y))
-                {
-                    continue;
-                }
-
-                list.Add(cells[i,j]);
-            }
-        }
-
-        return list;
-    }
-
     
     private Collider[] GetNeiboor(Vector3 position, float radius)
     {
         return Physics.OverlapSphere(position, radius);
     }
 
+    private void Reset()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                cells[i, j].OnStart();
+            }
+        }
 
+        radius = 0;
+        time = 0;
+        approves.Clear();
+        active = true;
+    }
+
+    [Button]
+    public void StartAnim_1()
+    {
+        initCell = this.cells[0, 0];
+        action = (i) => dict[neiboors[i]].OnActive_1();
+        speed = 20;
+        Reset();
+    } 
+    
+    [Button]
+    public void StartAnim_2()
+    {
+        initCell = this.cells[0, 0];
+        action = (i) => dict[neiboors[i]].OnActive_2();
+        speed = 12;
+        Reset();
+    }
 }

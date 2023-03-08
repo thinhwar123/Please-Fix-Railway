@@ -7893,6 +7893,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!81 &1325508433
 AudioListener:
   m_ObjectHideFlags: 0
@@ -9065,9 +9086,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aefedb7d2316b04f9ccfc76b15f41d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 20
   time: 0
-  speed: 10
-  targetTime: 0.1
 --- !u!1 &1481166341
 GameObject:
   m_ObjectHideFlags: 0
@@ -10175,9 +10195,9 @@ Animation:
   m_GameObject: {fileID: 1654920564}
   m_Enabled: 1
   serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 5250389f9fc519f4e8e63ad913ea4d58, type: 2}
+  m_Animation: {fileID: 7400000, guid: 62a0e7acc329bdb4b8c323db2476e30a, type: 2}
   m_Animations:
-  - {fileID: 7400000, guid: 5250389f9fc519f4e8e63ad913ea4d58, type: 2}
+  - {fileID: 7400000, guid: 62a0e7acc329bdb4b8c323db2476e30a, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -13330,6 +13350,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &2054059713
 GameObject:
   m_ObjectHideFlags: 0
