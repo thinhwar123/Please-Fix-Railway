@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameData : Singleton<GameData> {
-    public ChapterConfigs m_ChapterConfigs;
+    public ChapterGlobalConfig m_ChapterConfigs;
     private void Awake() {
         DontDestroyOnLoad(gameObject);
         if(m_Instance != null) {

@@ -34,7 +34,6 @@ public class LevelCreator : Singleton<LevelCreator>
     public List<ButtonSelectEntity> m_ButtonSelectEntityList;
     #endregion
 
-
     #region Unity Functions
     private void Awake()
     {
@@ -42,7 +41,7 @@ public class LevelCreator : Singleton<LevelCreator>
         {
             m_ButtonSelectEntityList[i].Setup(EntityGlobalConfig.Instance.m_EntityConfigList[i], OnClickButtonChooseTile);
         }
-        LoadCurrentEditLevel();
+
 
         m_ButtonSaveStart.onClick.AddListener(OnClickButtonSaveStart);
         m_ButtonSaveSolution.onClick.AddListener(OnClickButtonSaveSolution);
@@ -59,13 +58,17 @@ public class LevelCreator : Singleton<LevelCreator>
         m_InputHeight.onValueChanged.AddListener(value => SaveInputText(value, out m_CurrentEditLevelData.m_Height));
         m_InputRailCount.onValueChanged.AddListener(value => SaveInputText(value, out m_CurrentEditLevelData.m_RailCount));
     }
+    private void Start()
+    {
+        LoadCurrentEditLevel();
+    }
     #endregion
 
     #region Save - Load - Create Functions
 
     public void LoadCurrentEditLevel()
     {
-        m_CurrentEditLevelData = LevelDataConfig.Instance.CurrentEditLevelData;
+        m_CurrentEditLevelData = LevelDataGlobalConfig.Instance.CurrentEditLevelData;
         m_CurrentEditLevelData.OnLoadCurrentEditData();
         m_InputChap.text = m_CurrentEditLevelData.m_Chap.ToString();
         m_InputLevel.text = m_CurrentEditLevelData.m_Level.ToString();
@@ -264,7 +267,7 @@ public class LevelCreator : Singleton<LevelCreator>
     #region Map Create Functions
     private void LoadCurrentEditLevelData()
     {
-        m_CurrentEditLevelData.OnLoadData(LevelDataConfig.Instance.GetLevelString(m_CurrentEditLevelData.m_Chap, m_CurrentEditLevelData.m_Level));
+        m_CurrentEditLevelData.OnLoadData(LevelDataGlobalConfig.Instance.GetLevelString(m_CurrentEditLevelData.m_Chap, m_CurrentEditLevelData.m_Level));
         m_InputWidth.text = m_CurrentEditLevelData.m_Width.ToString();
         m_InputHeight.text = m_CurrentEditLevelData.m_Height.ToString();
         m_InputRailCount.text = m_CurrentEditLevelData.m_RailCount.ToString();
@@ -292,12 +295,6 @@ public class LevelCreator : Singleton<LevelCreator>
     }
     public void RemoveEntity()
     {
-        //if (m_AllBaseObject == null) return;
-        //foreach (GameObject go in m_AllBaseObject)
-        //{
-        //    Destroy(go);
-        //}
-        //m_AllBaseObject = null;
         for (int i = 0; i < CellManager.Instance.CurrentHeight; i++)
         {
             for (int j = 0; j < CellManager.Instance.CurrentWidth; j++)

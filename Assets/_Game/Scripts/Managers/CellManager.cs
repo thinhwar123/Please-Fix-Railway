@@ -41,11 +41,19 @@ public class CellManager : Singleton<CellManager>
     }
     public Cell GetCell(int x, int y)
     {
+        if (x < 0 || y < 0 || x > 9 || y > 9) return null;
         return m_CellList[x + y * 10];
     }
     public Cell GetCell(Coordinates coordinates)
     {
         return GetCell(coordinates.x, coordinates.y);
+    }
+    public Cell[] GetCellArround(Cell cell)
+    {
+        return new Cell[] { GetCell(cell.Coordinates.x + 1, cell.Coordinates.y),
+                            GetCell(cell.Coordinates.x - 1, cell.Coordinates.y),
+                            GetCell(cell.Coordinates.x, cell.Coordinates.y + 1),
+                            GetCell(cell.Coordinates.x, cell.Coordinates.y - 1)};
     }
 
     #region Editor
@@ -64,7 +72,7 @@ public class CellManager : Singleton<CellManager>
         m_CellList.Clear();
 
         m_CellTransform = transform.FindChildOrCreate("Cell");
-        m_EntityTransform= transform.FindChildOrCreate("Enity");
+        m_EntityTransform = transform.FindChildOrCreate("Enity");
 
         for (int i = 0; i < 10; i++)
         {
@@ -75,12 +83,12 @@ public class CellManager : Singleton<CellManager>
                 tempCell.Coordinates.x = j;
                 tempCell.Coordinates.y = i;
 
-                tempCell.transform.localPosition = new Vector3(tempCell.Coordinates.x, 0 ,tempCell.Coordinates.y);
+                tempCell.transform.localPosition = new Vector3(tempCell.Coordinates.x, 0, tempCell.Coordinates.y);
                 tempCell.gameObject.SetActive(false);
                 m_CellList.Add(tempCell);
             }
         }
-    } 
+    }
 #endif
     #endregion
 

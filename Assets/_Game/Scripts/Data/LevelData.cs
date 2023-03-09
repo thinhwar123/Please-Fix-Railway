@@ -18,6 +18,22 @@ public class LevelData
 
     public List<EntitySaveData> m_StartEntityList;
     public List<EntitySaveData> m_SolutionEntityList;
+    
+    public LevelData()
+    {
+
+    }
+    public LevelData(string json)
+    {
+        if (string.Compare(json, "") == 0)
+        {
+            OnInitNewData();
+        }
+        else
+        {
+            ConvertJsonToObject(json);
+        }
+    }
 
     public EntitySaveData GetStartObjectInfor(int x, int y)
     {
@@ -60,7 +76,6 @@ public class LevelData
             ConvertJsonToObject(json);
         }
     }
-    [Button]
     public void OnLoadCurrentEditData()
     {
         OnLoadData(m_Chap, m_Level);
@@ -79,7 +94,6 @@ public class LevelData
             ConvertJsonToObject(json);
         }
     }
-    [Button]
     public void OnSaveData()
     {
         if (m_Chap != 0 && m_Level != 0)

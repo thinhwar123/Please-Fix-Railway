@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 public class BasicRail : Entity
-{    
+{
     public List<Connection> m_Connections = new List<Connection>();
     public virtual BasicRail GetNextRail(Connection connection)
     {
@@ -33,5 +33,4 @@ public class BasicRail : Entity
     {
 
     }
-
 }

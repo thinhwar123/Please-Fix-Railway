@@ -52,7 +52,7 @@ public class LevelSaveDatas {
     }
     public void LevelUp() {
         int passedLevel = LevelUp(selectedChapterID);
-        int chapterMaxLevel = GameData.Instance.GetChapterConfig(selectedChapterID).maxLevel;
+        int chapterMaxLevel = GameData.Instance.GetChapterConfig(selectedChapterID).normalLevel;
         if(passedLevel == chapterMaxLevel) {
             int nextChapterID = selectedChapterID + 1;
             if (!IsUnlockedChapter(nextChapterID)) {
