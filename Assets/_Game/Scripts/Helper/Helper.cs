@@ -21,4 +21,13 @@ public static class Helper
         WFSDictionary[time] = new WaitForSeconds(time);
         return WFSDictionary[time];
     }
+
+    public static void GetPositions<T>(List<T> gameObject, List<Vector3> positions)
+    {
+        for (int i = 0; i < gameObject.Count; i++)
+        {
+            Vector3 position = (gameObject[i] as GameObject).transform.position;
+            positions.Add(position);
+        }
+    }
 }

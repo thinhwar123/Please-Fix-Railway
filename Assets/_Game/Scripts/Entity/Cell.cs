@@ -45,5 +45,4 @@ public class Cell : MonoBehaviour
         entity.Transform.rotation = rotation;
         entity.Coordinates = Coordinates;
     } 
-    
 }
