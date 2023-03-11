@@ -13,11 +13,12 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private LevelData m_CurrentLevelData;
 
     public int CurrentRailCount { get => m_CurrentRailCount; set => m_CurrentRailCount = value; }
+    public LevelData CurrentLevelData { get => m_CurrentLevelData; set => m_CurrentLevelData = value; }
 
     #region Unity Functions
     private void Start()
     {
-        LoadLevel(1, 10);
+        UI_Game.Instance.OpenUI(UIID.UICMainMenu);
     } 
     #endregion
 
@@ -29,8 +30,8 @@ public class GameManager : Singleton<GameManager>
         m_CurrentChap = chap;
         m_CurrentLevel = level;
 
-        m_CurrentLevelData = new LevelData(LevelDataGlobalConfig.Instance.GetLevelString(chap, level));
-        m_CurrentRailCount = m_CurrentLevelData.m_RailCount;
+        CurrentLevelData = new LevelData(LevelDataGlobalConfig.Instance.GetLevelString(chap, level));
+        m_CurrentRailCount = CurrentLevelData.m_RailCount;
         RemoveEntity();
         CreateNewMap();
         LoadStartEntity();
@@ -38,6 +39,8 @@ public class GameManager : Singleton<GameManager>
         UpdateAllTunnel();
         UpdateAllPressureRail();
         UpdateLocolmotivePosition();
+
+        GameInputHandler.Instance.ActiveModifyMode();
     }
     [Button]
     public void LoadNextLevel()
@@ -58,13 +61,32 @@ public class GameManager : Singleton<GameManager>
         {
             LoadLevel(Mathf.Abs(m_CurrentChap) + 1, 1);
         }
-    } 
+    }
+    public void LoadBackLevel()
+    {
+        //if (m_CurrentChap > 0 && m_CurrentLevel > 1)
+        //{
+        //    LoadLevel(m_CurrentChap, m_CurrentLevel - 1);
+        //}
+        //else if (m_CurrentChap > 1 && m_CurrentLevel == 1)
+        //{
+        //    LoadLevel(-m_CurrentChap - 1, m_CurrentChap);
+        //}
+        //else if (m_CurrentChap < 0 && m_CurrentLevel < m_CurrentChapterConfig.hardLevel)
+        //{
+        //    LoadLevel(m_CurrentChap, m_CurrentLevel - 1);
+        //}
+        //else if (ChapterGlobalConfig.Instance.GetChapterConfig(Mathf.Abs(m_CurrentChap) - 1) != null)
+        //{
+        //    LoadLevel(Mathf.Abs(m_CurrentChap) - 1, 1);
+        //}
+    }
     #endregion
 
     #region Map Create Functions
     private void CreateNewMap()
     {
-        CellManager.Instance.CreateMap(m_CurrentLevelData.m_Width, m_CurrentLevelData.m_Height);
+        CellManager.Instance.CreateMap(CurrentLevelData.m_Width, CurrentLevelData.m_Height);
     }
     public void RemoveEntity()
     {
@@ -78,11 +100,11 @@ public class GameManager : Singleton<GameManager>
     }
     private void LoadStartEntity()
     {
-        for (int i = 0; i < m_CurrentLevelData.m_Height; i++)
+        for (int i = 0; i < CurrentLevelData.m_Height; i++)
         {
-            for (int j = 0; j < m_CurrentLevelData.m_Width; j++)
+            for (int j = 0; j < CurrentLevelData.m_Width; j++)
             {
-                EntitySaveData entitySaveData = m_CurrentLevelData.GetStartObjectInfor(j, i);
+                EntitySaveData entitySaveData = CurrentLevelData.GetStartObjectInfor(j, i);
                 if (entitySaveData.m_EntityType != EntityType.Null)
                 {
                     Cell cell = CellManager.Instance.GetCell(entitySaveData.m_Coordinates);
@@ -95,11 +117,11 @@ public class GameManager : Singleton<GameManager>
     }
     public void LoadSolutionEntity()
     {
-        for (int i = 0; i < m_CurrentLevelData.m_Height; i++)
+        for (int i = 0; i < CurrentLevelData.m_Height; i++)
         {
-            for (int j = 0; j < m_CurrentLevelData.m_Width; j++)
+            for (int j = 0; j < CurrentLevelData.m_Width; j++)
             {
-                EntitySaveData entitySaveData = m_CurrentLevelData.GetSolutionObjectInfor(j, i);
+                EntitySaveData entitySaveData = CurrentLevelData.GetSolutionObjectInfor(j, i);
                 if (entitySaveData.m_EntityType != EntityType.Null)
                 {
                     Cell cell = CellManager.Instance.GetCell(entitySaveData.m_Coordinates);

@@ -6,7 +6,7 @@ using Sirenix.OdinInspector;
 
 public class GameInputHandler : Singleton<GameInputHandler>
 {
-    enum EnityModifyMode
+    public enum EntityModifyMode
     {
         Disable = 0,
         Add = 1,
@@ -18,7 +18,7 @@ public class GameInputHandler : Singleton<GameInputHandler>
     private Transform m_MainCameraTransform;
     public Transform MainCameraTransform { get { return m_MainCameraTransform ??= MainCamera.transform; } }
     
-    [SerializeField] private EnityModifyMode m_EnityModifyMode;
+    [SerializeField] private EntityModifyMode m_EnityModifyMode;
     [SerializeField] private LayerMask m_WhatIsCell;
 
     [DictionaryDrawerSettings(), SerializeField]
@@ -38,7 +38,7 @@ public class GameInputHandler : Singleton<GameInputHandler>
 
     private void Update()
     {
-        
+        HandleSwapMode();
         HandleAddEntity();
         HandleRemoveEntity();
     }
@@ -46,19 +46,34 @@ public class GameInputHandler : Singleton<GameInputHandler>
 
     public void ActiveModifyMode()
     {
-        m_EnityModifyMode = EnityModifyMode.Add;
+        m_EnityModifyMode = EntityModifyMode.Add;
         
         InitConnectionCell();
     }
     public void DeactiveModifyMode()
     {
-        m_EnityModifyMode = EnityModifyMode.Disable;
+        m_EnityModifyMode = EntityModifyMode.Disable;
+    }
+    public void ChangeEntityModifyMode(EntityModifyMode entityModifyMode)
+    {
+        m_EnityModifyMode = entityModifyMode;
     }
 
     #region Handle Input Functions
+    public void HandleSwapMode()
+    {
+        if (Input.GetKeyDown(KeyCode.Q) && m_EnityModifyMode == EntityModifyMode.Remove)
+        {
+            m_EnityModifyMode = EntityModifyMode.Add;
+        }
+        if (Input.GetKeyDown(KeyCode.W) && m_EnityModifyMode == EntityModifyMode.Add)
+        {
+            m_EnityModifyMode = EntityModifyMode.Remove;
+        }
+    }
     public void HandleAddEntity()
     {
-        if (m_EnityModifyMode != EnityModifyMode.Add) return;
+        if (m_EnityModifyMode != EntityModifyMode.Add) return;
         if (Extension.IsPointerOverUIGameObject()) return;
 
         if (Input.GetKey(KeyCode.Mouse0))
@@ -99,7 +114,7 @@ public class GameInputHandler : Singleton<GameInputHandler>
     }
     public void HandleRemoveEntity()
     {
-        if (m_EnityModifyMode != EnityModifyMode.Remove) return;
+        if (m_EnityModifyMode != EntityModifyMode.Remove) return;
         if (Extension.IsPointerOverUIGameObject()) return;
         if (Input.GetKey(KeyCode.Mouse0))
         {

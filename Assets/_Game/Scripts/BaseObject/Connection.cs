@@ -23,12 +23,12 @@ public class Connection : MonoBehaviour
         res.z = Mathf.RoundToInt(res.z);
         return res;
     }
-    private void OnDrawGizmos()
-    {
-        if (m_Direction == null) return;
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(m_Direction.position, m_Direction.position + m_Direction.forward * 0.3f);
-    }
+    //private void OnDrawGizmos()
+    //{
+    //    if (m_Direction == null) return;
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawLine(m_Direction.position, m_Direction.position + m_Direction.forward * 0.3f);
+    //}
 
     [Button]
     public void UpdatePath()

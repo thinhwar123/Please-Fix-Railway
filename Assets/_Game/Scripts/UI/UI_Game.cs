@@ -8,9 +8,9 @@ using System.Numerics;
 public enum UIID
 {
     UICMainMenu,
-    UICMapProgress,
-    UICChapter,
-    UICIngame
+    UICLevelSelect,
+    UICIngame,
+
 }
 
 

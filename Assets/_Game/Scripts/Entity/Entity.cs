@@ -46,7 +46,7 @@ public class Entity : MonoBehaviour
     [SerializeField] protected Coordinates m_Coordinates;
 
     private UIEditEntity m_CurrentUIEditEntity;
-
+    private Tween m_ScaleTween;
 
 
     public EntityType EntityType { get => m_EntityType; }
@@ -85,19 +85,22 @@ public class Entity : MonoBehaviour
     }
     public void OnDespawn()
     {
+        m_ScaleTween?.Kill();
         m_Model.localScale = Vector3.one;
-        m_Model.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack);
+        m_ScaleTween = m_Model.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack);
 
     }
     public void OnSpawn()
     {
+        m_ScaleTween?.Kill();
         m_Model.localScale = Vector3.one * 0.8f;
-        m_Model.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+        m_ScaleTween = m_Model.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
     }
     public void OnReplace()
     {
-        m_Model.localScale = Vector3.one;
-        m_Model.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack);
+        //m_ScaleTween?.Kill();
+        //m_Model.localScale = Vector3.one;
+        //m_ScaleTween = m_Model.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack);
     }
     //[Sirenix.OdinInspector.Button]
     //public void Setup()

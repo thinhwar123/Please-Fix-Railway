@@ -8,6 +8,7 @@ using UnityEngine.Events;
 
 public class AnimTest : MonoBehaviour
 {
+    [SerializeField] private LayerMask m_WhatIsCell;
     Cell[,] cells = new Cell[10,10];
     Dictionary<Collider, Cell> dict = new Dictionary<Collider, Cell>();
     List<Collider> approves = new List<Collider>();
@@ -58,7 +59,7 @@ public class AnimTest : MonoBehaviour
     
     private Collider[] GetNeiboor(Vector3 position, float radius)
     {
-        return Physics.OverlapSphere(position, radius);
+        return Physics.OverlapSphere(position, radius, m_WhatIsCell);
     }
 
     private void ActiveWave()

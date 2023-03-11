@@ -12,10 +12,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18fa0c5c44233704d9688099e06d1bf8, type: 3}
   m_Name: ChapterGlobalConfig
   m_EditorClassIdentifier: 
-  chapterConfigs:
+  m_ChapterConfigs:
   - chap: 1
     normalLevel: 15
-    hardLevel: 8
+    hardLevel: 6
+    chapterName: An Easy Start
   - chap: 2
-    normalLevel: 9
-    hardLevel: 7
+    normalLevel: 0
+    hardLevel: 0
+    chapterName: Invisible Links
+  - chap: 3
+    normalLevel: 0
+    hardLevel: 0
+    chapterName: First Obstacle
+  - chap: 4
+    normalLevel: 0
+    hardLevel: 0
+    chapterName: Perfect Timing
+  - chap: 5
+    normalLevel: 0
+    hardLevel: 0
+    chapterName: Slow Down A Bit
+  - chap: 6
+    normalLevel: 0
+    hardLevel: 0
+    chapterName: A Systematic Way
+  - chap: 7
+    normalLevel: 0
+    hardLevel: 0
+    chapterName: Help Or Hinder
+  - chap: 8
+    normalLevel: 10
+    hardLevel: 10
+    chapterName: Go To The Moon
