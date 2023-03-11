@@ -128,6 +128,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EntityType: 2
+  m_ConnectionCode:
+    m_Code: 010000000400000002000000
   m_BoxCollider: {fileID: 4303059744027015226}
   m_Model: {fileID: 1186226135706274274}
   m_Index: 1

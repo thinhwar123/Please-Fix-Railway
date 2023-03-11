@@ -13,7 +13,6 @@ public class Cell : MonoBehaviour
     public Coordinates Coordinates { get => m_Coordinates ??= new Coordinates(); }
     public Entity Entity { get => m_Entity; }
 
-
     public void Register(Entity entity)
     {
         if (m_Entity == null)
@@ -46,22 +45,29 @@ public class Cell : MonoBehaviour
         entity.Transform.rotation = rotation;
         entity.Coordinates = Coordinates;
     }
-    public void AddEnity(Entity entity)
+    public void AddEnity(Entity entity, int rotateTime)
     {
         if (entity == null) return;
         Register(entity);
         entity.OnSpawn();
         entity.Transform.SetParent(CellManager.Instance.EntityTransform);
         entity.Transform.position = Transform.position;
+        entity.Transform.eulerAngles = new Vector3(0, 90 * rotateTime, 0);
         entity.Coordinates = Coordinates;
     }
-    public void ReplaceEntity(Entity entity)
+    public void ReplaceEntity(Entity entity, int rotateTime)
     {
         Entity currentEntity = m_Entity;
         Unregister(currentEntity);
         Destroy(currentEntity.gameObject);
 
-        AddEnity(entity);
+        if (entity == null) return;
+        Register(entity);
+        entity.OnReplace();
+        entity.Transform.SetParent(CellManager.Instance.EntityTransform);
+        entity.Transform.position = Transform.position;
+        entity.Transform.eulerAngles = new Vector3(0, 90 * rotateTime, 0);
+        entity.Coordinates = Coordinates;
     }
 
 }

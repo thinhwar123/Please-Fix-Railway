@@ -179,6 +179,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EntityType: 3
+  m_ConnectionCode:
+    m_Code: 03000000
   m_BoxCollider: {fileID: 5323605636133421175}
   m_Model: {fileID: 8313685120275608541}
   m_Index: 0

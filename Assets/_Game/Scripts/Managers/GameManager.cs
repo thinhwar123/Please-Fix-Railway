@@ -17,7 +17,7 @@ public class GameManager : Singleton<GameManager>
     #region Unity Functions
     private void Start()
     {
-        LoadLevel(1, 15);
+        LoadLevel(1, 10);
     } 
     #endregion
 
@@ -113,6 +113,7 @@ public class GameManager : Singleton<GameManager>
     #endregion
 
     #region Update Entity Functions
+
     public void UpdateAllTunnel()
     {
         List<Tunnel> tunnelList = new List<Tunnel>();

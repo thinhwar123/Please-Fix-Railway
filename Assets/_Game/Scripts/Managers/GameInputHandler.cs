@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MyExtension;
+using Sirenix.OdinInspector;
 
 public class GameInputHandler : Singleton<GameInputHandler>
 {
@@ -20,29 +21,39 @@ public class GameInputHandler : Singleton<GameInputHandler>
     [SerializeField] private EnityModifyMode m_EnityModifyMode;
     [SerializeField] private LayerMask m_WhatIsCell;
 
-    [SerializeField] private DestructibleRail m_StraightRail;
-    [SerializeField] private DestructibleRail m_SwitchLeftRail;
-    [SerializeField] private DestructibleRail m_SwitchRightRail;
-    [SerializeField] private DestructibleRail m_TurnRail;
-
+    [DictionaryDrawerSettings(), SerializeField]
     private Dictionary<Cell, List<Cell>> m_CellConnectDictionary = new Dictionary<Cell, List<Cell>>();
     private Ray m_InteractRay;
     private RaycastHit m_RaycastHit;
-    [SerializeField] private Cell m_HitCell;
-    [SerializeField] private Cell m_LastHitCell;
+    private Cell m_HitCell;
+    private Cell m_LastHitCell;
+
+    private DestructibleRail m_DestructibleRailPrefab;
+    private DestructibleRail m_SpawnDestructibleRail;
+    private int m_RotateTime;
+
 
 
     #region Unity Functions
-    private void Awake()
-    {
 
-    }
     private void Update()
     {
+        
         HandleAddEntity();
         HandleRemoveEntity();
     }
     #endregion
+
+    public void ActiveModifyMode()
+    {
+        m_EnityModifyMode = EnityModifyMode.Add;
+        
+        InitConnectionCell();
+    }
+    public void DeactiveModifyMode()
+    {
+        m_EnityModifyMode = EnityModifyMode.Disable;
+    }
 
     #region Handle Input Functions
     public void HandleAddEntity()
@@ -90,7 +101,24 @@ public class GameInputHandler : Singleton<GameInputHandler>
     {
         if (m_EnityModifyMode != EnityModifyMode.Remove) return;
         if (Extension.IsPointerOverUIGameObject()) return;
-
+        if (Input.GetKey(KeyCode.Mouse0))
+        {
+            m_InteractRay = MainCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(m_InteractRay, out m_RaycastHit, 100, m_WhatIsCell))
+            {
+                m_HitCell = m_RaycastHit.collider.GetComponent<Cell>();
+                if (m_LastHitCell != m_HitCell )
+                {
+                    RemoveEnity(m_HitCell);
+                    m_LastHitCell = m_HitCell;
+                }
+            }
+        }
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            m_HitCell = null;
+            m_LastHitCell = null;
+        }
     }
 
     #endregion
@@ -98,36 +126,120 @@ public class GameInputHandler : Singleton<GameInputHandler>
     #region Other Functions
     private void CreateDefaultRail(Cell cell)
     {
-        cell.AddEnity(GetDefaultRail());
+        (DestructibleRail railPrefab, int rotate) = DestructibleRailMananger.Instance.DestructilbeRail(new ConnectionCode(2, 4));
+        DestructibleRail rail = Instantiate(railPrefab);
+        cell.AddEnity(rail, rotate);
     }
     private void UpdateCorrectRail(Cell cell)
     {
-        if (cell.Entity.EntityType != EntityType.DestructionRail || GetCellConnections(cell).Count == 3) return;
-        
+        if (cell.Entity is not DestructibleRail || GetCellConnections(cell).Count != 3) return;
+        SwapCellConnection(cell);
+
+        (m_DestructibleRailPrefab, m_RotateTime) = DestructibleRailMananger.Instance.DestructilbeRail(GetConnectionCode(cell));
+        m_SpawnDestructibleRail = Instantiate(m_DestructibleRailPrefab);
+        cell.ReplaceEntity(m_SpawnDestructibleRail, m_RotateTime);
+
     }
     private void CreateCorrectRail(Cell cell, Cell lastCell)
     {
-        if (lastCell.Entity is DestructibleRail)
+        if (lastCell.Entity is DestructibleRail )
         {
+            AddConnectionCell(lastCell, cell);
+            AddConnectionCell(cell, lastCell);
 
+            (m_DestructibleRailPrefab, m_RotateTime) = DestructibleRailMananger.Instance.DestructilbeRail(GetConnectionCode(cell));
+            m_SpawnDestructibleRail = Instantiate(m_DestructibleRailPrefab);
+            cell.AddEnity(m_SpawnDestructibleRail, m_RotateTime);
+
+            (m_DestructibleRailPrefab, m_RotateTime) = DestructibleRailMananger.Instance.DestructilbeRail(GetConnectionCode(lastCell));
+
+            m_SpawnDestructibleRail = Instantiate(m_DestructibleRailPrefab);
+            lastCell.ReplaceEntity(m_SpawnDestructibleRail, m_RotateTime);
         }
-        else
+        else if (lastCell.Entity is IndestructibleRail)
         {
+            IndestructibleRail indestructibleRail = lastCell.Entity as IndestructibleRail;
+            if (indestructibleRail.CanConnectToCell(cell))
+            {
+                AddConnectionCell(cell, lastCell);
+            }
 
+            (m_DestructibleRailPrefab, m_RotateTime) = DestructibleRailMananger.Instance.DestructilbeRail(GetConnectionCode(cell));
+            m_SpawnDestructibleRail = Instantiate(m_DestructibleRailPrefab);
+            cell.AddEnity(m_SpawnDestructibleRail, m_RotateTime);
         }
+
     }
     private void UpdateCorrectRail(Cell cell, Cell lastCell)
     {
+        if (lastCell.Entity is DestructibleRail && cell.Entity is DestructibleRail)
+        {
+            AddConnectionCell(lastCell, cell);
+            AddConnectionCell(cell, lastCell);
 
+            (m_DestructibleRailPrefab, m_RotateTime) = DestructibleRailMananger.Instance.DestructilbeRail(GetConnectionCode(cell));
+            m_SpawnDestructibleRail = Instantiate(m_DestructibleRailPrefab);
+            cell.ReplaceEntity(m_SpawnDestructibleRail, m_RotateTime);
+
+            (m_DestructibleRailPrefab, m_RotateTime) = DestructibleRailMananger.Instance.DestructilbeRail(GetConnectionCode(lastCell));
+            m_SpawnDestructibleRail = Instantiate(m_DestructibleRailPrefab);
+            lastCell.ReplaceEntity(m_SpawnDestructibleRail, m_RotateTime);
+        }
+        else if (lastCell.Entity is IndestructibleRail && cell.Entity is DestructibleRail)
+        {
+            IndestructibleRail indestructibleRail = lastCell.Entity as IndestructibleRail;
+            if (indestructibleRail.CanConnectToCell(cell))
+            {
+                AddConnectionCell(cell, lastCell);
+            }
+
+            (m_DestructibleRailPrefab, m_RotateTime) = DestructibleRailMananger.Instance.DestructilbeRail(GetConnectionCode(cell));
+            m_SpawnDestructibleRail = Instantiate(m_DestructibleRailPrefab);
+            cell.ReplaceEntity(m_SpawnDestructibleRail, m_RotateTime);
+        }
+        else if (lastCell.Entity is DestructibleRail && cell.Entity is IndestructibleRail)
+        {
+            IndestructibleRail indestructibleRail = cell.Entity as IndestructibleRail;
+            if (indestructibleRail.CanConnectToCell(lastCell))
+            {
+                AddConnectionCell(lastCell, cell);
+            }
+
+            (m_DestructibleRailPrefab, m_RotateTime) = DestructibleRailMananger.Instance.DestructilbeRail(GetConnectionCode(lastCell));
+            m_SpawnDestructibleRail = Instantiate(m_DestructibleRailPrefab);
+            lastCell.ReplaceEntity(m_SpawnDestructibleRail, m_RotateTime);
+        }
+    }
+    public void RemoveEnity(Cell cell)
+    {
+        if (cell.Entity != null && cell.Entity is DestructibleRail)
+        {
+            ClearConnectionCell(cell);
+            cell.RemoveCurrentEnity();
+        }
     }
     private void AddConnectionCell(Cell cell, Cell connectCell) 
     {
+        if (GetCellConnections(cell).Contains(connectCell)) return;
+        
         GetCellConnections(cell).Add(connectCell);
 
         if (GetCellConnections(cell).Count > 3)
         {
             GetCellConnections(cell).RemoveAt(0);
         }
+    }
+    private void SwapCellConnection(Cell cell)
+    {
+        if (GetCellConnections(cell).Count != 3) return;
+
+        Cell temp = GetCellConnections(cell)[0];
+        GetCellConnections(cell)[0] = GetCellConnections(cell)[1];
+        GetCellConnections(cell)[1] = temp;
+    }
+    private void ClearConnectionCell(Cell cell)
+    {
+        GetCellConnections(cell).Clear();
     }
     private List<Cell> GetCellConnections(Cell cell)
     {
@@ -137,54 +249,52 @@ public class GameInputHandler : Singleton<GameInputHandler>
         }
         return m_CellConnectDictionary[cell];
     }
-    private DestructibleRail FindCorrectRail(Cell cell)
+    private ConnectionCode GetConnectionCode(Cell cell)
     {
-        if (GetCellConnections(cell).Count == 1)
+        List<int> indexList = new List<int>();
+        for (int i = 0; i < GetCellConnections(cell).Count; i++)
         {
+            if (GetCellConnections(cell)[i].Coordinates.x < cell.Coordinates.x)
+            {
+                indexList.Add(1);
+            }
+            else if (GetCellConnections(cell)[i].Coordinates.y > cell.Coordinates.y)
+            {
+                indexList.Add(2);
+            }
+            if (GetCellConnections(cell)[i].Coordinates.x > cell.Coordinates.x)
+            {
+                indexList.Add(3);
+            }
+            if (GetCellConnections(cell)[i].Coordinates.y < cell.Coordinates.y)
+            {
+                indexList.Add(4);
+            }
+        }
+        return new ConnectionCode(indexList);
+    }
+    private void InitConnectionCell()
+    {
+        m_CellConnectDictionary.Clear();
 
-            return Instantiate(m_StraightRail);
-        }
-        return null;
-    }
-    private DestructibleRail GetDefaultRail()
-    {
-        return Instantiate(m_StraightRail);
-    }
-    [Sirenix.OdinInspector.Button]
-    private List<int> GetEntityOpenConnection(Entity entity)
-    {
-        List<int> openConnections = new List<int>();
-        if (entity is not BasicRail) return openConnections;
 
-        BasicRail basicRail = entity as BasicRail;
-        for (int i = 0; i < basicRail.m_Connections.Count; i++)
+        for (int i = 0; i < CellManager.Instance.CurrentHeight; i++)
         {
-            openConnections.Add(GetDirectionIndex(basicRail.m_Connections[i]));
+            for (int j = 0; j < CellManager.Instance.CurrentWidth; j++)
+            {
+                if (CellManager.Instance.GetCell(j, i).Entity == null) continue;
+                if (CellManager.Instance.GetCell(j, i).Entity is DestructibleRail)
+                {
+                    DestructibleRail destructibleRail = CellManager.Instance.GetCell(j, i).Entity as DestructibleRail;
+                    List<Cell> cellList = destructibleRail.GetAllCellCanConnect();
+                    for (int k = 0; k < cellList.Count; k++)
+                    {
+                        AddConnectionCell(CellManager.Instance.GetCell(j, i), cellList[k]);
+                    }
+                }
+            }
         }
-        return openConnections;
     }
-    private int GetDirectionIndex(Connection connection)
-    {
-        Debug.Log(connection.GetConnectDirection());
-        if (connection.m_NexConnection == null) return 0;
 
-        if (Vector3.Distance(connection.GetConnectDirection(), Vector3.left) < 0.1f)
-        {
-            return 1;
-        }
-        else if (Vector3.Distance(connection.GetConnectDirection(), Vector3.forward) < 0.1f)
-        {
-            return 2;
-        }
-        else if (Vector3.Distance(connection.GetConnectDirection(), Vector3.right) < 0.1f)
-        {
-            return 3;
-        }
-        else if (Vector3.Distance(connection.GetConnectDirection(), Vector3.back) < 0.1f)
-        {
-            return 4;
-        }
-        return 0;
-    }
     #endregion
 }

@@ -80,6 +80,7 @@ public class CellManager : Singleton<CellManager>
             {
                 Cell tempCell = PrefabUtility.InstantiatePrefab(m_CellPrefab, m_CellTransform) as Cell;
                 EditorUtility.SetDirty(tempCell);
+                tempCell.name = $"Cell[{i},{j}]";
                 tempCell.Coordinates.x = j;
                 tempCell.Coordinates.y = i;
 

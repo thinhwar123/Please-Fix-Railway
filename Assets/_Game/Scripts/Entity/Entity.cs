@@ -37,6 +37,7 @@ public class Entity : MonoBehaviour
     public Transform Transform { get => m_Transform ??= transform; }
 
     [SerializeField] private EntityType m_EntityType;
+    [SerializeField] private ConnectionCode m_ConnectionCode;
     [SerializeField] private BoxCollider m_BoxCollider;
     [SerializeField] private Transform m_Model;
 
@@ -63,6 +64,7 @@ public class Entity : MonoBehaviour
         }
     }
     public Coordinates Coordinates { get => m_Coordinates; set => m_Coordinates = value; }
+    public ConnectionCode ConnectionCode { get => m_ConnectionCode; }
 
     public void EditSelectEntity()
     {
@@ -89,8 +91,13 @@ public class Entity : MonoBehaviour
     }
     public void OnSpawn()
     {
-        m_Model.localScale = Vector3.zero;
+        m_Model.localScale = Vector3.one * 0.8f;
         m_Model.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+    }
+    public void OnReplace()
+    {
+        m_Model.localScale = Vector3.one;
+        m_Model.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack);
     }
     //[Sirenix.OdinInspector.Button]
     //public void Setup()
