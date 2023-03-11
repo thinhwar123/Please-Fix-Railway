@@ -4317,16 +4317,21 @@ MonoBehaviour:
   - {fileID: 38981841}
   CellStartPositions: []
   OneCellStartPositions: []
-  Ease: 17
+  Ease: 26
   Rows: []
   RowStartPositions: []
   CenterPoint: {fileID: 0}
   RotateVector: {x: 0, y: 360, z: 0}
+  xMoveEffect03: 30
+  yMoveEffect03: 10
+  xMoveEffect03Duration: 22
+  yMoveEffect03Duraiton: 1
+  rowTweenDelayTimeEffect03: 0.066
   xMove: 15
-  yMove: 20
-  tweenDuration: 10
-  delaySetTransformParent: 0.01
-  rotationSpeed: 0.5
+  yMove: 50
+  tweenDuration: 3
+  delaySetTransformParent: 0.05
+  rotationSpeed: 4
 --- !u!4 &765465078
 Transform:
   m_ObjectHideFlags: 0

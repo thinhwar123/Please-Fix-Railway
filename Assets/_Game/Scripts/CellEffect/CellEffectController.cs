@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Events;
 using UnityEngine;
 using DG.Tweening;
 using Sirenix.OdinInspector;
 using System;
+using Newtonsoft.Json.Linq;
 
 public class CellEffectController : Singleton<CellEffectController>
 {
-    public Array[,] CellMatrix;
+
+    [ShowInInspector] public GameObject[,] CellMatrix = new GameObject[10, 10];
     public List<Cell> Cells;
     public List<Cell> OneRowCells;
     public List<Vector3> CellStartPositions = new List<Vector3>();
@@ -22,13 +25,25 @@ public class CellEffectController : Singleton<CellEffectController>
     public GameObject CenterPoint;
     public Vector3 RotateVector;
 
-    private Sequence SequenceEffect;
+    [Header("Effect 03")]
+    //[SerializeField] private List<List<Cell>> CellsEffect03;
+    [SerializeField] private float xMoveEffect03;
+    [SerializeField] private float yMoveEffect03;
+    [SerializeField] private float xMoveEffect03Duration;
+    [SerializeField] private float yMoveEffect03Duraiton;
+    [SerializeField] private float rowTweenDelayTimeEffect03;
+
+    [Header("General")]
     [SerializeField] private float xMove;
     [SerializeField] private float yMove;
     [SerializeField] private float tweenDuration = 2f;
     [SerializeField] private float delaySetTransformParent;
     [SerializeField] private float rotationSpeed;
+    
+    private Sequence SequenceEffect;
     private float cellTweenTimeDelay = 0.2f;
+
+
 
     private void Awake()
     {
@@ -37,6 +52,20 @@ public class CellEffectController : Singleton<CellEffectController>
         Helper.GetPositions(Rows, RowStartPositions);
         CenterPoint = CellManager.Instance.CenterPoint;
         GetOneRowCellStartPositions();
+        GetCellsForEffect03();
+        GetCellMatrix();
+    }
+
+    private void GetCellMatrix()
+    {
+        Cell[] tempArray = Cells.ToArray();
+        for (int i = 0; i < CellMatrix.GetLength(0); i++)
+        {
+            for (int j = 0; j < CellMatrix.GetLength(1); j++)
+            {
+                CellMatrix[i, j] = tempArray[i * CellMatrix.GetLength(1) + j].gameObject;
+            }
+        }
     }
 
     [Button("Play Effect 01")]
@@ -47,11 +76,19 @@ public class CellEffectController : Singleton<CellEffectController>
             if (i % 2 == 0 )
             {
                 Rows[i].transform.DOMoveX(xMove, tweenDuration).SetEase(Ease).
+                    OnComplete(() =>
+                    {
+                        
+                    }).
                     SetLoops(2, LoopType.Yoyo).From(RowStartPositions[i]);
             }
             else
             {
                 Rows[i].transform.DOMoveX(-xMove, tweenDuration).SetEase(Ease).
+                    OnComplete(() =>
+                    {
+                        
+                    }).
                     SetLoops(2, LoopType.Yoyo).From(RowStartPositions[i]);
             }
         }
@@ -76,6 +113,42 @@ public class CellEffectController : Singleton<CellEffectController>
         }
     }
 
+    [Button("Play Effect 03")]
+    private void PlayEffect03()
+    {
+        StartCoroutine(SetEffect03());
+    }
+
+    private IEnumerator SetEffect03()
+    {
+        for (int i = 0; i < Rows.Count; i++)
+        {
+            Rows[i].transform.DOMoveX(xMoveEffect03, xMoveEffect03);           
+        }
+        for (int i = 0; i < Rows.Count; i++)
+        {
+            Rows[i].transform.DOMoveY(yMoveEffect03, yMoveEffect03Duraiton).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
+            yield return Helper.GetWaitForSeconds(rowTweenDelayTimeEffect03);
+        }
+    }
+
+    private void GetCellsForEffect03()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                //CellsEffect03[i].Add()
+            }
+        }
+    }
+
+    [Button("Reset Row Positions")]
+    private void ResetRowPositions()
+    {
+
+    }
+
     [Button("Play Effect")]
     private void PlayEffect()
     {
@@ -93,10 +166,10 @@ public class CellEffectController : Singleton<CellEffectController>
         StartCoroutine(SequenceCellEffect());
     }
 
-    [Button("Reset Cell Position")]
-    private void ResetCellPosition()
+    [Button("Reset Cell Positions")]
+    private void ResetCellPositions()
     {
-        SequenceEffect?.Kill();
+        DOTween.KillAll();
         for (int i = 0; i < Cells.Count; i++)
         {
             Cells[i].WorldPosition = CellStartPositions[i];
