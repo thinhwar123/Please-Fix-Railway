@@ -42,6 +42,7 @@ public static class CellExtension
                     });
 
             });
+
     }
 
     public static void OnActive_3(this Cell cell)
@@ -53,16 +54,20 @@ public static class CellExtension
             });
     }
 
-    public static void OnActive_4(this Cell cell)
-    {
-        //Vector3 target = 
+    //public static void OnActive_4(this Cell cell, Vector3 center)
+    //{
+    //    //Vector3 target = 
+    //    //cell.Transform.DOMoveY(-2, 0.5f).OnComplete(()=>
+    //    //    {
+    //    //        cell.OnChange();
+    //    //        cell.Transform.DOMoveY(0, 0.5f).SetDelay(0.5f);
+    //    //    });
+    //    Vector3 path_1 = cell.Transform.position;
+    //    Vector3 a = (center - path_1).Right().normalized + path_1;
+    //    Vector3 b = (center - path_1).Right().normalized + center;
+    //    Vector3 path_2 = (center - path_1) + (center - path_1).normalized + path_1;
 
-        //cell.Transform.DOMoveY(-2, 0.5f).OnComplete(()=>
-        //    {
-        //        cell.OnChange();
-        //        cell.Transform.DOMoveY(0, 0.5f).SetDelay(0.5f);
-        //    });
-
-    }
+    //    cell.Transform.DOPath(new Vector3[] { path_1, a, b, path_2 }, 1f, PathType.CubicBezier, PathMode.Full3D).OnComplete(()=> Debug.Log("Done"));
+    //}
 
 }

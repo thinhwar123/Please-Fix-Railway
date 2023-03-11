@@ -71,4 +71,31 @@ public class Cell : MonoBehaviour
     //        transform.position = new Vector3(transform.position.x, curveY.Evaluate(time), transform.position.z);
     //    }
     //}
+
+    public Vector3[] testPoints;
+
+    public void OnActive_4(Vector3 center)
+    {
+        Transform.DOPath(testPoints, 2f, PathType.CubicBezier, PathMode.Full3D, 10, Color.red);
+        path
+    }
+
+    private void OnDrawGizmos()
+    {
+        if(testPoints.Length > 5)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawSphere(testPoints[0], 0.5f);
+            Gizmos.DrawSphere(testPoints[3], 0.5f);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(testPoints[1], 0.3f);
+            Gizmos.DrawWireSphere(testPoints[2], 0.3f);
+            Gizmos.DrawWireSphere(testPoints[4], 0.3f);
+            Gizmos.DrawWireSphere(testPoints[5], 0.3f);
+
+
+        }
+
+    }
 }
+

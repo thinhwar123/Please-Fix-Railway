@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
@@ -15,6 +16,7 @@ public class AnimTest : MonoBehaviour
     Collider[] neiboors;
     [SerializeField] float speed = 10.0f;
     [SerializeField] float time;
+    [SerializeField] Transform center;
     float radius = 0;
     Vector3 startPoint;
 
@@ -108,24 +110,10 @@ public class AnimTest : MonoBehaviour
     [Button]
     public void StartAnim_4()
     {
-        //List<Cell> evenCells = new List<Cell>();
-        //List<Cell> oddCells = new List<Cell>();
-        for (int i = 0; i < 10; i++)
-        {
-            for (int j = 0; j < 10; j++)
-            {
-                if ((i + j) % 2 == 0)
-                {
-                    //evenCells.Add(cells[i, j]);
-                }
-                else
-                {
-                    //oddCells.Add(cells[i, j]);
-                    cells[i, j].OnActive_3();
-                }
-            }
-        }
-    }  
+        cells[0, 0].OnActive_4(center.position);
+
+        //DOVirtual.DelayedCall(2f, () => Debug.Log("Log_2"));
+    }
 
 
     [Button]
