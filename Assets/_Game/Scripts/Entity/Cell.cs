@@ -73,9 +73,6 @@ public class Cell : MonoBehaviour
         entity.Coordinates = Coordinates;
     }
 
-    }
-
-
     public Material[] material;
     public Renderer renderer;
     //Link
@@ -99,3 +96,5 @@ public class Cell : MonoBehaviour
     //    }
     //}
 }
+
+
