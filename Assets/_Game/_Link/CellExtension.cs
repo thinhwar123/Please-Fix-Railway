@@ -10,59 +10,66 @@ public static class CellExtension
 {
     public static void OnActive_1(this Cell cell)
     {
-        float target_1 = cell.Transform.position.y + 1.5f;
-        float target_2 = cell.Transform.position.y - 1.5f;
-        float target_3 = cell.Transform.position.y;
-        cell.Transform.DOMoveY(target_1, .3f).SetEase(Ease.Linear).OnComplete(
-            () => cell.Transform.DOMoveY(target_2, .5f).SetEase(Ease.Linear).OnComplete(() =>
+        float target_1 = cell.TF.position.y + 1.5f;
+        float target_2 = cell.TF.position.y - 1.5f;
+        float target_3 = cell.TF.position.y;
+        cell.TF.DOMoveY(target_1, .3f).SetEase(Ease.Linear).OnComplete(
+            () => cell.TF.DOMoveY(target_2, .5f).SetEase(Ease.Linear).OnComplete(() =>
             {
                 cell.OnChange();
-                cell.Transform.DOMoveY(target_3, .5f);
+                cell.TF.DOMoveY(target_3, .5f);
             }));
     }
 
     public static void OnActive_2(this Cell cell)
     {
-        float target = cell.Transform.position.y;
-        cell.Transform.DOMoveY(target + 2, 1f).OnComplete(
+        float target = cell.TF.position.y;
+        cell.TF.DOMoveY(target + 2, 1f).OnComplete(
             () =>
             {
-                cell.Transform.DORotate(Vector3.up * 180, .2f, RotateMode.WorldAxisAdd).SetEase(Ease.Linear).OnComplete(
+                cell.TF.DORotate(Vector3.up * 180, .2f, RotateMode.WorldAxisAdd).SetEase(Ease.Linear).OnComplete(
                     () =>
                     {
-                        cell.Transform.rotation = Quaternion.Euler(Vector3.up * 180);
+                        cell.TF.rotation = Quaternion.Euler(Vector3.up * 180);
                         cell.OnChange();
-                        cell.Transform.DORotate(Vector3.up * 180, .2f, RotateMode.WorldAxisAdd).SetEase(Ease.Linear).OnComplete(
+                        cell.TF.DORotate(Vector3.up * 180, .2f, RotateMode.WorldAxisAdd).SetEase(Ease.Linear).OnComplete(
                             () =>
                             {
-                                cell.Transform.rotation = Quaternion.identity;
-                                cell.Transform.DOMoveY(target, 0.2f).SetDelay(0.5f);
+                                cell.TF.rotation = Quaternion.identity;
+                                cell.TF.DOMoveY(target, 0.2f).SetDelay(0.5f);
                             });
                                 
                     });
 
             });
+
     }
 
     public static void OnActive_3(this Cell cell)
     {
-        cell.Transform.DOMoveY(-2, 0.5f).OnComplete(()=>
+        cell.TF.DOMoveY(-2, 0.5f).OnComplete(()=>
             {
                 cell.OnChange();
-                cell.Transform.DOMoveY(0, 0.5f).SetDelay(0.5f);
+                cell.TF.DOMoveY(0, 0.5f).SetDelay(0.5f);
             });
     }
 
-    public static void OnActive_4(this Cell cell)
+    public static void OnActive_4(this Cell cell, Vector3 center)
     {
-        //Vector3 target = 
+        //path = Spiral(TF.position, center, 0.5f, 0.3f).ToArray();
+        Vector3[] path;
+        Vector3 startPoint = cell.TF.position;
+        path = CurvePaths.SpiralNarrow(cell.TF.position, center, 0.5f, 0.3f).ToArray();
 
-        //cell.Transform.DOMoveY(-2, 0.5f).OnComplete(()=>
-        //    {
-        //        cell.OnChange();
-        //        cell.Transform.DOMoveY(0, 0.5f).SetDelay(0.5f);
-        //    });
-
+        cell.TF.DOPath(path, UnityEngine.Random.Range(0.7f, 1.2f)).OnComplete(() =>
+        {
+            cell.TF.position = center;
+            cell.OnChange();
+            path = CurvePaths.SpiralExtend(cell.TF.position, startPoint, 0.5f, -0.3f).ToArray();
+            cell.TF.DOPath(path, UnityEngine.Random.Range(0.7f, 1.2f)).SetDelay(0.3f).OnComplete(() => cell.TF.position = startPoint);
+        });
     }
+
+
 
 }

@@ -2,13 +2,15 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using Unity.VisualScripting.FullSerializer;
 using UnityEditor;
 using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
     private Transform m_Transform;
-    public Transform Transform { get => m_Transform ??= transform; }
+    public Transform TF { get => m_Transform ??= transform; }
 
     [SerializeField] private Coordinates m_Coordinates;
     [SerializeField] private Entity m_Entity;
@@ -43,7 +45,7 @@ public class Cell : MonoBehaviour
         if (entity == null) return;
         Register(entity);
         entity.Transform.SetParent(CellManager.Instance.EntityTransform);
-        entity.Transform.position = Transform.position;
+        entity.Transform.position = TF.position;
         entity.Transform.rotation = rotation;
         entity.Coordinates = Coordinates;
     }
@@ -71,4 +73,12 @@ public class Cell : MonoBehaviour
     //        transform.position = new Vector3(transform.position.x, curveY.Evaluate(time), transform.position.z);
     //    }
     //}
+
+
+
+    private void OnDrawGizmos()
+    {
+
+    }
 }
+
