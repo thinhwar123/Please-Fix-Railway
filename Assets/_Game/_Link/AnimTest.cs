@@ -1,0 +1,139 @@
+using Sirenix.OdinInspector;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.Events;
+
+public class AnimTest : MonoBehaviour
+{
+    Cell[,] cells = new Cell[10,10];
+    Dictionary<Collider, Cell> dict = new Dictionary<Collider, Cell>();
+    List<Collider> approves = new List<Collider>();
+
+    Collider[] neiboors;
+    [SerializeField] float speed = 10.0f;
+    [SerializeField] float time;
+    float radius = 0;
+    Vector3 startPoint;
+
+    bool active = false;
+
+    public void Start()
+    {
+        Cell[] cells = FindObjectsOfType<Cell>();
+
+        for (int i = 0; i < cells.Length; i++)
+        {
+            this.cells[cells[i].Coordinates.x, cells[i].Coordinates.y] = cells[i];
+            dict.Add(cells[i].GetComponent<Collider>(), cells[i]);
+
+            this.cells[cells[i].Coordinates.x, cells[i].Coordinates.y] = cells[i];
+        }
+
+    }
+
+    private UnityAction<int> action;
+
+    private void FixedUpdate()
+    {
+        if (active) 
+        {
+            radius += Time.fixedDeltaTime * speed;
+            time += Time.fixedDeltaTime;
+
+            neiboors = GetNeiboor(startPoint, radius);
+            for (int i = 0; i < neiboors.Length; i++)
+            {
+                if (!approves.Contains(neiboors[i]))
+                {
+                    approves.Add(neiboors[i]);
+                    //dict[neiboors[i]].OnActive_1();
+                    action?.Invoke(i);
+                }
+            }
+        }
+    }
+    
+    private Collider[] GetNeiboor(Vector3 position, float radius)
+    {
+        return Physics.OverlapSphere(position, radius);
+    }
+
+    private void ActiveWave()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                cells[i, j].OnStart();
+            }
+        }
+
+        radius = 0;
+        time = 0;
+        approves.Clear();
+        active = true;
+    }
+
+    [Button]
+    public void StartAnim_1()
+    {
+        startPoint = new Vector3(-0.5f, 0, -0.5f);
+        action = (i) => dict[neiboors[i]].OnActive_1();
+        speed = 20;
+        ActiveWave();
+    } 
+    
+    [Button]
+    public void StartAnim_2()
+    {
+        startPoint = new Vector3(-0.5f, 0, -0.5f);
+        action = (i) => dict[neiboors[i]].OnActive_2();
+        speed = 12;
+        ActiveWave();
+    }
+    
+
+    [Button]
+    public void StartAnim_3()
+    {
+        startPoint = cells[4, 4].Transform.position;
+        action = (i) => dict[neiboors[i]].OnActive_1();
+        speed = 12;
+        ActiveWave();
+    }
+    
+    [Button]
+    public void StartAnim_4()
+    {
+        //List<Cell> evenCells = new List<Cell>();
+        //List<Cell> oddCells = new List<Cell>();
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                if ((i + j) % 2 == 0)
+                {
+                    //evenCells.Add(cells[i, j]);
+                }
+                else
+                {
+                    //oddCells.Add(cells[i, j]);
+                    cells[i, j].OnActive_3();
+                }
+            }
+        }
+    }  
+
+
+    [Button]
+    public void StartAnim_5()
+    {
+        startPoint = cells[4, 4].Transform.position;
+        action = (i) => dict[neiboors[i]].OnActive_1();
+        speed = 12;
+        ActiveWave();
+    }
+}

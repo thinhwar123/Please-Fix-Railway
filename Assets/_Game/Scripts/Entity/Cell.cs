@@ -1,5 +1,8 @@
+using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Cell : MonoBehaviour
@@ -70,4 +73,29 @@ public class Cell : MonoBehaviour
         entity.Coordinates = Coordinates;
     }
 
+    }
+
+
+    public Material[] material;
+    public Renderer renderer;
+    //Link
+    public void OnStart()
+    {
+        renderer.material = material[0];
+    }
+
+    public void OnChange()
+    {
+        renderer.material = material[1];
+    }
+
+
+    //private void FixedUpdate()
+    //{
+    //    if (time >= 0f)
+    //    {
+    //        time += Time.fixedDeltaTime * speed;
+    //        transform.position = new Vector3(transform.position.x, curveY.Evaluate(time), transform.position.z);
+    //    }
+    //}
 }
