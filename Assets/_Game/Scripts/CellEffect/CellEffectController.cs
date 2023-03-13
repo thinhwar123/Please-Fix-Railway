@@ -1,21 +1,21 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Events;
 using UnityEngine;
+using Random = UnityEngine.Random;
 using DG.Tweening;
 using Sirenix.OdinInspector;
-using System;
-using Newtonsoft.Json.Linq;
 
 public class CellEffectController : Singleton<CellEffectController>
 {
-    [ShowInInspector] public GameObject[,] CellMatrix = new GameObject[10, 10];
-    [ShowInInspector] public List<List<GameObject>> RowCellMatrix = new List<List<GameObject>>();
-    [ShowInInspector] public List<List<GameObject>> ColumnCellMatrix = new List<List<GameObject>>();
-    public List<Cell> Cells;
-    public List<Vector3> CellStartPositions = new List<Vector3>();
-    public List<GameObject> Rows;
-    public List<Vector3> RowStartPositions; 
+    [ShowInInspector] private Dictionary<Cell, Vector3> dictCellStartPositions = new Dictionary<Cell, Vector3>();   
+    [ShowInInspector] private Cell[,] cellMatrix = new Cell[10, 10];
+    [ShowInInspector] private List<List<Cell>> rowCellMatrix = new List<List<Cell>>();
+    [ShowInInspector] private List<List<Cell>> columnCellMatrix = new List<List<Cell>>();
+    [SerializeField] private List<Cell> cells;
+    [SerializeField] private List<Vector3> cellStartPositions = new List<Vector3>();
+    [SerializeField] private List<GameObject> rows;
+    [SerializeField] private List<Vector3> rowStartPositions; 
 
     [Header("Effect 01")]
     [SerializeField] private float xMoveEffect01;
@@ -23,8 +23,8 @@ public class CellEffectController : Singleton<CellEffectController>
     [SerializeField] private Ease easeEffect01;
 
     [Header("Effect 02")]
-    [SerializeField] private GameObject CenterPoint;
-    [SerializeField] private Vector3 RotateVector;
+    [SerializeField] private GameObject centerPoint;
+    [SerializeField] private Vector3 rotateVector;
     [SerializeField] private float yMoveEffect02;
     [SerializeField] private float tweenEffect02Duration;
     [SerializeField] private float rotationSpeed;
@@ -40,85 +40,122 @@ public class CellEffectController : Singleton<CellEffectController>
     [SerializeField] private Ease easeEffect03;
 
     [Header("Effect 04")]
-    [ShowInInspector] private List<List<GameObject>> halfColumn01 = new List<List<GameObject>>();
-    [ShowInInspector] private List<List<GameObject>> halfColumn02 = new List<List<GameObject>>();
+    [ShowInInspector] private List<List<Cell>> halfColumn01 = new List<List<Cell>>();
+    [ShowInInspector] private List<List<Vector3>> halfColumn01StartPostisions = new List<List<Vector3>>();  
+    [ShowInInspector] private List<List<Cell>> halfColumn02 = new List<List<Cell>>();
     [SerializeField] private float xMoveEffect04;
     [SerializeField] private float xMoveEffect04Duration;
     [SerializeField] private float yMoveEffect04;
     [SerializeField] private float yMoveEffect04Duraiton;
     [SerializeField] private float tweenDelayTimeEffect04;
-    [SerializeField] private Ease easeEffect04;
+    [SerializeField] private Ease easeXMoveEffect04;
+    [SerializeField] private Ease easeYMoveEffect04;
+
+    [Header("Effect 05")]
+    [SerializeField] private Transform node01;
+    [SerializeField] private Transform node02;
+    [SerializeField] private float minJumpPower = 2f;
+    [Range(2.5f, 4.5f)]
+    [SerializeField] private float maxJumpPower = 4f;
+    [SerializeField] private float minXJumpDurationEffect05 = 4f;
+    [Range(4.5f, 5.5f)]
+    [SerializeField] private float maxXJumpDurationEffect05 = 5f;
+    [SerializeField] private int minXJunpTime = 4;
+    [Range(6, 10)]
+    [SerializeField] private int maxXJumpTime = 8;
+    [SerializeField] private Ease easeXMoveEffect05;
+    [SerializeField] private Ease easeRotateEffect05;
 
     private void Awake()
     {
-        Rows = CellManager.Instance.Rows;
-        Cells = CellManager.Instance.CellList;
+        rows = CellManager.Instance.Rows;
+        cells = CellManager.Instance.CellList;
         GetCellMatrix();
         GetAllRowsAndColumnsInCellMatrix();
         GetHalfColumns();
+        GetDictCellStartPositions();
         GetCellStartPositions();
-        Helper.GetStartPositions(Rows, RowStartPositions);
+        Helper.GetStartPositions(rows, rowStartPositions);
+        DOTween.Init();
+        DOTween.SetTweensCapacity(500, 250);
     }
 
     private void GetCellMatrix()
     {
-        Cell[] tempArray = Cells.ToArray();
-        for (int i = 0; i < CellMatrix.GetLength(0); i++)
+        Cell[] tempArray = cells.ToArray();
+        for (int i = 0; i < cellMatrix.GetLength(0); i++)
         {
-            for (int j = 0; j < CellMatrix.GetLength(1); j++)
+            for (int j = 0; j < cellMatrix.GetLength(1); j++)
             {
-                CellMatrix[i, j] = tempArray[i * CellMatrix.GetLength(1) + j].gameObject;
+                cellMatrix[i, j] = tempArray[i * cellMatrix.GetLength(1) + j];
             }
         }
     }
 
     private void GetAllRowsAndColumnsInCellMatrix()
     {
-        int numbRows = CellMatrix.GetLength(0);
-        int numbColumns = CellMatrix.GetLength(1);
+        int numbRows = cellMatrix.GetLength(0);
+        int numbColumns = cellMatrix.GetLength(1);
         for (int i = 0; i < numbRows; i++)
         {
-            List<GameObject> tempList = new List<GameObject>();
-            RowCellMatrix.Add(tempList);    
+            List<Cell> tempList = new List<Cell>();
+            rowCellMatrix.Add(tempList);    
             for (int j = 0; j < numbColumns; j++)
             {
-                GameObject cell = CellMatrix[i, j];
-                RowCellMatrix[i].Add(cell);
+                Cell cell = cellMatrix[i, j];
+                rowCellMatrix[i].Add(cell);
             }
         }
         for (int i = 0; i < numbColumns; i++)
         {
-            List<GameObject> tempList = new List<GameObject>();
-            ColumnCellMatrix.Add(tempList);
+            List<Cell> tempList = new List<Cell>();
+            columnCellMatrix.Add(tempList);
             for (int j = 0; j < numbRows; j++)
             {
-                GameObject cell = CellMatrix[j, i];
-                ColumnCellMatrix[i].Add(cell);
+                Cell cell = cellMatrix[j, i];
+                columnCellMatrix[i].Add(cell);
             }
         }
     }
 
+    private void GetDictCellStartPositions()
+    {
+        for (int i = 0; i < cells.Count; i++)
+        {
+            dictCellStartPositions.Add(cells[i], cells[i].WorldPosition);
+        }
+    }
+
+    private Vector3 GetCellStartPosition(Cell cell) 
+    {
+        if (dictCellStartPositions.ContainsKey(cell))
+        {
+            return dictCellStartPositions[cell];
+        }
+        return Vector3.zero;
+    }
+
     private void GetCellStartPositions()
     {
-        for(int i = 0; i < Cells.Count; i++)
+        for(int i = 0; i < cells.Count; i++)
         {
-            Vector3 position = Cells[i].WorldPosition;
-            CellStartPositions.Add(position);
+            Vector3 position = cells[i].WorldPosition;
+            cellStartPositions.Add(position);
         }
     }
 
     private void GetHalfColumns()
     {
-        for (int i = 0; i < ColumnCellMatrix.Count; i++)
+        for (int i = 0; i < columnCellMatrix.Count; i++)
         {
-            if (i < ColumnCellMatrix.Count / 2)
+            if (i < columnCellMatrix.Count / 2)
             {
-                List<GameObject> tempList = ColumnCellMatrix[i];
+                List<Cell> tempList = columnCellMatrix[i];
                 halfColumn01.Add(tempList); 
             }
             else
             {
-                List<GameObject> tempList = ColumnCellMatrix[i];
+                List<Cell> tempList = columnCellMatrix[i];
                 halfColumn02.Add(tempList);
             }
         }
@@ -128,25 +165,25 @@ public class CellEffectController : Singleton<CellEffectController>
     [Button("Play Effect 01")]
     private void PlayRowEffect01()
     {
-        for (int i = 0; i < Rows.Count; i++)
+        for (int i = 0; i < rows.Count; i++)
         {
             if (i % 2 == 0)
             {
-                Rows[i].transform.DOMoveX(xMoveEffect01, tweenEffect01Duration).SetEase(easeEffect01).
+                rows[i].transform.DOMoveX(xMoveEffect01, tweenEffect01Duration).SetEase(easeEffect01).
                     OnComplete(() =>
                     {
 
                     }).
-                    SetLoops(2, LoopType.Yoyo).From(RowStartPositions[i]);
+                    SetLoops(2, LoopType.Yoyo).From(rowStartPositions[i]);
             }
             else
             {
-                Rows[i].transform.DOMoveX(-xMoveEffect01, tweenEffect01Duration).SetEase(easeEffect01).
+                rows[i].transform.DOMoveX(-xMoveEffect01, tweenEffect01Duration).SetEase(easeEffect01).
                     OnComplete(() =>
                     {
 
                     }).
-                    SetLoops(2, LoopType.Yoyo).From(RowStartPositions[i]);
+                    SetLoops(2, LoopType.Yoyo).From(rowStartPositions[i]);
             }
         }
     }
@@ -161,13 +198,13 @@ public class CellEffectController : Singleton<CellEffectController>
 
     private IEnumerator SetEffect02()
     {
-        CenterPoint.transform.DOMoveY(yMoveEffect02, tweenEffect02Duration);
-        CenterPoint.transform.DORotate(RotateVector, rotationSpeed, RotateMode.LocalAxisAdd)
+        centerPoint.transform.DOMoveY(yMoveEffect02, tweenEffect02Duration);
+        centerPoint.transform.DORotate(rotateVector, rotationSpeed, RotateMode.LocalAxisAdd)
             .SetLoops(-1, LoopType.Incremental)
             .SetEase(Ease.Linear);
-        foreach (Cell cell in Cells)
+        foreach (Cell cell in cells)
         {
-            cell.Transform.SetParent(CenterPoint.transform);
+            cell.Transform.SetParent(centerPoint.transform);
             yield return Helper.GetWaitForSeconds(delaySetTransformParent);
         }
     }
@@ -181,15 +218,15 @@ public class CellEffectController : Singleton<CellEffectController>
 
     private IEnumerator SetEffect03()
     {
-        for (int i = 0; i < Rows.Count; i++)
+        for (int i = 0; i < rows.Count; i++)
         {
-            Rows[i].transform.DOMoveX(xMoveEffect03, xMoveEffect03Duration);
+            rows[i].transform.DOMoveX(xMoveEffect03, xMoveEffect03Duration);
         }
-        for (int i = 0; i < ColumnCellMatrix.Count; i++)
+        for (int i = 0; i < columnCellMatrix.Count; i++)
         {
-            for (int j = 0; j < ColumnCellMatrix[i].Count; j++)
+            for (int j = 0; j < columnCellMatrix[i].Count; j++)
             {
-                ColumnCellMatrix[i][j].transform.DOMoveY(yMoveEffect03, yMoveEffect03Duraiton)
+                columnCellMatrix[i][j].transform.DOMoveY(yMoveEffect03, yMoveEffect03Duraiton)
                     .SetLoops(-1, LoopType.Yoyo);
 
             }
@@ -197,33 +234,22 @@ public class CellEffectController : Singleton<CellEffectController>
         } 
     }
 
+    #region Effect 04
     [Button("Play Effect 04")]
     private void PlayEffect04()
     {
-        for (int i = 0; i < halfColumn01.Count; i++)
-        {
-            for (int j = 0; j < halfColumn01[i].Count; j++)
-            {
-                halfColumn01[i][j].transform.DOMoveX(-xMoveEffect04, xMoveEffect04Duration);
-            }
-        }
-        for (int i = 0; i < halfColumn02.Count; i++)
-        {
-            for (int j = 0; j < halfColumn02[i].Count; j++)
-            {
-                halfColumn02[i][j].transform.DOMoveX(xMoveEffect04, xMoveEffect04Duration);
-            }
-        }
-        //StartCoroutine(SetHalfColumn01Effect04());
+        StartCoroutine(SetHalfColumn01Effect04());
+        StartCoroutine(SetHalfColumn02Effect04());
     }
 
     private IEnumerator SetHalfColumn01Effect04()
     {
         for (int i = 0; i < halfColumn01.Count; i++)
         {
-            for (int j = 0; j < halfColumn01.Count; j++)
+            for (int j = 0; j < halfColumn01[i].Count; j++)
             {
-                halfColumn01[i][j].transform.DOMoveY(yMoveEffect04, yMoveEffect04Duraiton);
+                halfColumn01[i][j].transform.DOMoveX(-xMoveEffect04, xMoveEffect04Duration).SetEase(easeXMoveEffect04);
+                halfColumn01[i][j].transform.DOMoveY(yMoveEffect04, yMoveEffect04Duraiton).SetEase(easeYMoveEffect04);
             }
             yield return Helper.GetWaitForSeconds(tweenDelayTimeEffect04);
         }
@@ -231,34 +257,90 @@ public class CellEffectController : Singleton<CellEffectController>
 
     private IEnumerator SetHalfColumn02Effect04()
     {
-
-        for (int i = 0; i < halfColumn02.Count; i++)
+        for (int i = halfColumn02.Count - 1; i >= 0; i--)
         {
-            for (int j = 0; j < halfColumn02.Count; j++)
+            for (int j = 0; j < halfColumn02[i].Count; j++)
             {
-                halfColumn01[i][j].transform.DOMoveY(-yMoveEffect04, yMoveEffect04Duraiton);
+                halfColumn02[i][j].transform.DOMoveX(xMoveEffect04, xMoveEffect04Duration).SetEase(easeXMoveEffect04);
+                halfColumn02[i][j].transform.DOMoveY(yMoveEffect04, yMoveEffect04Duraiton).SetEase(easeYMoveEffect04);
             }
             yield return Helper.GetWaitForSeconds(tweenDelayTimeEffect04);
         }
     }
+    #endregion
+
+    #region Effect 05
+    [Button("Play Effect 05")]
+    private void PlayEffect05() 
+    {
+        for (int i = 0; i < halfColumn01.Count; i++)
+        {
+            for (int j = 0; j < halfColumn01[i].Count; j++)
+            {
+                Cell cell = halfColumn01[i][j];
+                Vector3 startPosition = GetCellStartPosition(cell);
+                float jumpPower = Random.Range(minJumpPower, maxJumpPower);
+                int jumpTime = Random.Range(minXJunpTime, maxXJumpTime);
+                float duration = Random.Range(minXJumpDurationEffect05, maxXJumpDurationEffect05);
+                cell.Transform.DOJump(node02.position, jumpPower, jumpTime, duration)
+                    .SetEase(easeXMoveEffect05);
+                cell.Transform.DORotate(new Vector3(Random.Range(-180f, 180f), Random.Range(-180f, 180f), Random.Range(-180f, 180f)), duration)
+                    .SetEase(easeRotateEffect05)
+                    .OnComplete(() =>
+                    {
+                        cell.Transform.DOJump(startPosition, jumpPower, jumpTime, duration)
+                        .SetEase(easeXMoveEffect05);
+                        cell.Transform.DORotate(Vector3.zero, duration)       
+                        .SetEase(easeRotateEffect05);
+                    });
+            }
+        }
+
+        for (int i = halfColumn02.Count - 1; i >= 0; i--)
+        {
+            for (int j = 0; j < halfColumn02[i].Count; j++)
+            {
+                Cell cell = halfColumn02[i][j];
+                Vector3 startPosition = GetCellStartPosition(cell);
+                float jumpPower = Random.Range(minJumpPower, maxJumpPower);
+                int jumpTime = Random.Range(minXJunpTime, maxXJumpTime);
+                float duration = Random.Range(minXJumpDurationEffect05, maxXJumpDurationEffect05);
+                cell.Transform.DOJump(node01.position, jumpPower, jumpTime, duration)
+                   .SetEase(easeXMoveEffect05);
+                cell.Transform.DORotate(new Vector3(Random.Range(-180f, 180f), Random.Range(-180f, 180f), Random.Range(-180f, 180f)), duration)
+                    .SetEase(easeRotateEffect05)
+                    .OnComplete(() =>
+                    {
+                        cell.Transform.DOJump(startPosition, jumpPower, jumpTime, duration)
+                        .SetEase(easeXMoveEffect05);
+                        cell.Transform.DORotate(Vector3.zero, duration)
+                        .SetEase(easeRotateEffect05);
+                    });
+            }
+        }
+    }
+    #endregion
 
     [Button("Reset Cell Positions")]
     private void ResetCellPositions()
     {
+        StopAllCoroutines();
         DOTween.KillAll();
-        for (int i = 0; i < Cells.Count; i++)
+        for (int i = 0; i < cells.Count; i++)
         {
-            Cells[i].WorldPosition = CellStartPositions[i];
+            cells[i].WorldPosition = cellStartPositions[i];
+            cells[i].Rotation = Quaternion.identity;  
         }
     }
 
     [Button("Reset Row Positions")]
     private void ResetRowPositions()
     {
+        StopAllCoroutines();    
         DOTween.KillAll();
-        for (int i = 0; i < Rows.Count; i++)
+        for (int i = 0; i < rows.Count; i++)
         {
-            Rows[i].transform.position = RowStartPositions[i];
+            rows[i].transform.position = rowStartPositions[i];
         }
     }
 }

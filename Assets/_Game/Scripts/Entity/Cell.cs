@@ -7,6 +7,7 @@ public class Cell : MonoBehaviour
     private Transform m_Transform;
     public Transform Transform { get => m_Transform ??= transform; }
     public Vector3 WorldPosition { get => transform.position; set => transform.position = value; }
+    public Quaternion Rotation { get => transform.rotation; set => transform.rotation = value; }
 
     [SerializeField] private Coordinates m_Coordinates;
     [SerializeField] private Entity m_Entity;
