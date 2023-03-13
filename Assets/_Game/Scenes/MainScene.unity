@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4368,33 +4368,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c60ff9d43fc9b3649bb9a36d3d09948c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Cells: []
-  CellStartPositions: []
-  Rows: []
-  RowStartPositions: []
+  cells: []
+  cellStartPositions: []
+  rows: []
+  rowStartPositions: []
   xMoveEffect01: 30
   tweenEffect01Duration: 3
   easeEffect01: 26
-  CenterPoint: {fileID: 1697103446}
-  RotateVector: {x: 0, y: 0, z: 0}
+  centerPoint: {fileID: 0}
+  rotateVector: {x: 0, y: 0, z: 0}
   yMoveEffect02: 0
   tweenEffect02Duration: 0
   rotationSpeed: 0
   delaySetTransformParent: 0
   easeEffect02: 0
   xMoveEffect03: -30
-  xMoveEffect03Duration: 10
+  xMoveDisapearEffect03Duration: 4
+  xMoveApearEffect03Duration: 1
   yMoveEffect03: 4
   yMoveEffect03Duraiton: 0.5
   tweenDelayTimeEffect03: 0.1
   easeEffect03: 0
   xMoveEffect04: 30
-  xMoveEffect04Duration: 10
+  xMoveEffect04Duration: 3
   yMoveEffect04: 30
-  yMoveEffect04Duraiton: 10
+  yMoveEffect04Duraiton: 3
   tweenDelayTimeEffect04: 0.05
+  tweenAppearEffect04: 2
   easeXMoveEffect04: 0
   easeYMoveEffect04: 0
+  easeAppearEffect04: 26
   node01: {fileID: 1688389094}
   node02: {fileID: 859212724}
   minJumpPower: 2
