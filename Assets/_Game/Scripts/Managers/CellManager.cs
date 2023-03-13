@@ -11,17 +11,14 @@ public class CellManager : Singleton<CellManager>
 {
     private Transform m_Transform;
     public Transform Transform { get => m_Transform ??= transform; }
-    [SerializeField] private GameObject m_CenterPoint;
     [SerializeField] private List<GameObject> m_Rows;
+    [SerializeField] private List<Cell> m_CellList = new List<Cell>();
     [SerializeField] private Transform m_CellTransform;
     [SerializeField] private Transform m_EntityTransform;
     [SerializeField] private Cell m_CellPrefab;
-    [SerializeField] private List<Cell> m_CellList = new List<Cell>();
-
     [SerializeField] private int m_CurrentWidth;
     [SerializeField] private int m_CurrentHeight;
 
-    public GameObject CenterPoint { get => m_CenterPoint; set => m_CenterPoint = value; }
     public List<GameObject> Rows { get => m_Rows; set => m_Rows = value; }
     public Transform CellTransform { get => m_CellTransform; }
     public Transform EntityTransform { get => m_EntityTransform; }

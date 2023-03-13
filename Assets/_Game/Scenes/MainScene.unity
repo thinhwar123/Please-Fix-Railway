@@ -4304,34 +4304,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cells: []
-  OneRowCells:
-  - {fileID: 385602104}
-  - {fileID: 1590121004}
-  - {fileID: 1096940537}
-  - {fileID: 1225403102}
-  - {fileID: 558704445}
-  - {fileID: 1832800491}
-  - {fileID: 2046702515}
-  - {fileID: 723019498}
-  - {fileID: 1511183778}
-  - {fileID: 38981841}
   CellStartPositions: []
-  OneCellStartPositions: []
-  Ease: 26
   Rows: []
   RowStartPositions: []
-  CenterPoint: {fileID: 0}
-  RotateVector: {x: 0, y: 360, z: 0}
-  xMoveEffect03: 30
-  yMoveEffect03: 10
-  xMoveEffect03Duration: 22
-  yMoveEffect03Duraiton: 1
-  rowTweenDelayTimeEffect03: 0.066
-  xMove: 15
-  yMove: 50
-  tweenDuration: 3
-  delaySetTransformParent: 0.05
-  rotationSpeed: 4
+  xMoveEffect01: 30
+  tweenEffect01Duration: 3
+  easeEffect01: 26
+  CenterPoint: {fileID: 1697103446}
+  RotateVector: {x: 0, y: 0, z: 0}
+  yMoveEffect02: 0
+  tweenEffect02Duration: 0
+  rotationSpeed: 0
+  delaySetTransformParent: 0
+  easeEffect02: 0
+  xMoveEffect03: -30
+  xMoveEffect03Duration: 10
+  yMoveEffect03: 4
+  yMoveEffect03Duraiton: 0.1
+  tweenDelayTimeEffect03: 0.1
+  easeEffect03: 0
+  xMoveEffect04: 30
+  xMoveEffect04Duration: 5
+  yMoveEffect04: 30
+  yMoveEffect04Duraiton: 4
+  tweenDelayTimeEffect04: 0.2
+  easeEffect04: 0
 --- !u!4 &765465078
 Transform:
   m_ObjectHideFlags: 0
@@ -4343,7 +4340,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1697103447}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6779,7 +6777,6 @@ Transform:
   m_Children:
   - {fileID: 497401445}
   - {fileID: 1557561927}
-  - {fileID: 1697103447}
   m_Father: {fileID: 1707450338}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6795,7 +6792,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae01d5594ada36a4ca9d03e5b3f12b98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CenterPoint: {fileID: 1697103446}
   m_Rows:
   - {fileID: 411044362}
   - {fileID: 1298205147}
@@ -6807,9 +6803,6 @@ MonoBehaviour:
   - {fileID: 1884371561}
   - {fileID: 1642384908}
   - {fileID: 1800976584}
-  m_CellTransform: {fileID: 497401445}
-  m_EntityTransform: {fileID: 1557561927}
-  m_CellPrefab: {fileID: 5647407262022006643, guid: 6c37352cab5e5614ebb65a63dc47cfbf, type: 3}
   m_CellList:
   - {fileID: 519304038}
   - {fileID: 1911767537}
@@ -6911,6 +6904,9 @@ MonoBehaviour:
   - {fileID: 723019498}
   - {fileID: 1511183778}
   - {fileID: 38981841}
+  m_CellTransform: {fileID: 497401445}
+  m_EntityTransform: {fileID: 1557561927}
+  m_CellPrefab: {fileID: 5647407262022006643, guid: 6c37352cab5e5614ebb65a63dc47cfbf, type: 3}
   m_CurrentWidth: 10
   m_CurrentHeight: 10
 --- !u!1001 &1523218767
@@ -7731,13 +7727,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1697103446}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 4.5, y: 0, z: 4.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1514507979}
-  m_RootOrder: 2
+  m_Father: {fileID: 765465078}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1697103448
 MeshRenderer:

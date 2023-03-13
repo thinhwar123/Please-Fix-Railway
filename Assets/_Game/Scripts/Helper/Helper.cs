@@ -22,7 +22,7 @@ public static class Helper
         return WFSDictionary[time];
     }
 
-    public static void GetPositions<T>(List<T> gameObject, List<Vector3> positions)
+    public static void GetStartPositions<T>(List<T> gameObject, List<Vector3> positions)
     {
         for (int i = 0; i < gameObject.Count; i++)
         {
