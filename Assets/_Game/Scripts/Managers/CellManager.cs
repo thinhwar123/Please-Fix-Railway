@@ -18,6 +18,8 @@ public class CellManager : Singleton<CellManager>
 
     [SerializeField] private int m_CurrentWidth;
     [SerializeField] private int m_CurrentHeight;
+    [SerializeField] private int m_OffsetWidth;
+    [SerializeField] private int m_OffsetHeight;
 
     public Transform CellTransform { get => m_CellTransform; }
     public Transform EntityTransform { get => m_EntityTransform; }
@@ -31,16 +33,22 @@ public class CellManager : Singleton<CellManager>
     {
         m_CurrentWidth = width;
         m_CurrentHeight = height;
+        m_OffsetWidth = (10 - width) / 2;
+        m_OffsetHeight = (10 - height) / 2;
         for (int i = 0; i < 10; i++)
         {
             for (int j = 0; j < 10; j++)
             {
-                GetCell(j, i).gameObject.SetActive(i < height && j < width);
+                //m_CellList[j + i * 10].SetCanDrawEntity(m_OffsetHeight <= i && i < height + m_OffsetHeight && m_OffsetWidth <= j && j < m_OffsetWidth + width);
+                m_CellList[j + i * 10].SetCanDrawEntity(i < height && j < width);
             }
         }
     }
     public Cell GetCell(int x, int y)
     {
+        //if (x + m_OffsetWidth < 0 || y + m_OffsetHeight < 0 || x + m_OffsetWidth > 9 || y + m_OffsetHeight > 9) return null;
+        //return m_CellList[(x + m_OffsetWidth) + (y + m_OffsetHeight) * 10];
+
         if (x < 0 || y < 0 || x > 9 || y > 9) return null;
         return m_CellList[x + y * 10];
     }
@@ -48,13 +56,11 @@ public class CellManager : Singleton<CellManager>
     {
         return GetCell(coordinates.x, coordinates.y);
     }
-    public Cell[] GetCellArround(Cell cell)
-    {
-        return new Cell[] { GetCell(cell.Coordinates.x + 1, cell.Coordinates.y),
-                            GetCell(cell.Coordinates.x - 1, cell.Coordinates.y),
-                            GetCell(cell.Coordinates.x, cell.Coordinates.y + 1),
-                            GetCell(cell.Coordinates.x, cell.Coordinates.y - 1)};
-    }
+    //public Cell GetCellIgnoreOffset(int x, int y)
+    //{
+    //    if (x  < 0 || y  < 0 || x  > 9 || y  > 9) return null;
+    //    return m_CellList[x + y * 10];
+    //}
 
     #region Editor
 

@@ -236,13 +236,17 @@ public class GameInputHandler : Singleton<GameInputHandler>
     private void AddConnectionCell(Cell cell, Cell connectCell) 
     {
         if (GetCellConnections(cell).Contains(connectCell)) return;
-        
-        GetCellConnections(cell).Add(connectCell);
-
-        if (GetCellConnections(cell).Count > 3)
+        if ((cell.Coordinates.x == connectCell.Coordinates.x && Mathf.Abs(cell.Coordinates.y - connectCell.Coordinates.y) == 1) ||
+            (cell.Coordinates.y == connectCell.Coordinates.y && Mathf.Abs(cell.Coordinates.x - connectCell.Coordinates.x) == 1))
         {
-            GetCellConnections(cell).RemoveAt(0);
+            GetCellConnections(cell).Add(connectCell);
+
+            if (GetCellConnections(cell).Count > 3)
+            {
+                GetCellConnections(cell).RemoveAt(0);
+            }
         }
+
     }
     private void SwapCellConnection(Cell cell)
     {

@@ -41,6 +41,10 @@ public class GameManager : Singleton<GameManager>
         UpdateLocolmotivePosition();
 
         GameInputHandler.Instance.ActiveModifyMode();
+        if (UI_Game.Instance.IsOpenedUI(UIID.UICIngame))
+        {
+            UI_Game.Instance.GetUI<UICIngame>(UIID.UICIngame).Setup(true);
+        }
     }
     [Button]
     public void LoadNextLevel()
@@ -62,24 +66,29 @@ public class GameManager : Singleton<GameManager>
             LoadLevel(Mathf.Abs(m_CurrentChap) + 1, 1);
         }
     }
+    [Button]
     public void LoadBackLevel()
     {
-        //if (m_CurrentChap > 0 && m_CurrentLevel > 1)
-        //{
-        //    LoadLevel(m_CurrentChap, m_CurrentLevel - 1);
-        //}
-        //else if (m_CurrentChap > 1 && m_CurrentLevel == 1)
-        //{
-        //    LoadLevel(-m_CurrentChap - 1, m_CurrentChap);
-        //}
-        //else if (m_CurrentChap < 0 && m_CurrentLevel < m_CurrentChapterConfig.hardLevel)
-        //{
-        //    LoadLevel(m_CurrentChap, m_CurrentLevel - 1);
-        //}
-        //else if (ChapterGlobalConfig.Instance.GetChapterConfig(Mathf.Abs(m_CurrentChap) - 1) != null)
-        //{
-        //    LoadLevel(Mathf.Abs(m_CurrentChap) - 1, 1);
-        //}
+        if (m_CurrentChap > 0 && m_CurrentLevel > 1)
+        {
+            LoadLevel(m_CurrentChap, m_CurrentLevel - 1);
+        }
+        else if (m_CurrentChap > 0 && m_CurrentLevel == 1)
+        {
+            if (ChapterGlobalConfig.Instance.GetChapterConfig(Mathf.Abs(m_CurrentChap) - 1) != null)
+            {
+                LoadLevel(-(m_CurrentChap - 1), ChapterGlobalConfig.Instance.GetChapterConfig(Mathf.Abs(m_CurrentChap) - 1).hardLevel);
+            }
+
+        }
+        else if (m_CurrentChap < 0 && m_CurrentLevel > 1)
+        {
+            LoadLevel(m_CurrentChap, m_CurrentLevel - 1);
+        }
+        else if (m_CurrentChap < 0 && m_CurrentLevel == 1)
+        {
+            LoadLevel(Mathf.Abs(m_CurrentChap), m_CurrentChapterConfig.normalLevel);
+        }
     }
     #endregion
 

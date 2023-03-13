@@ -25,7 +25,7 @@ public class ButtonSelectLevel : MonoBehaviour
     {
         GameManager.Instance.LoadLevel(m_Chap, m_Level);
         UI_Game.Instance.CloseUI(UIID.UICLevelSelect);
-        UI_Game.Instance.OpenUI(UIID.UICIngame);
+        UI_Game.Instance.OpenUI<UICIngame>(UIID.UICIngame).Setup(true);
 
     }
 }

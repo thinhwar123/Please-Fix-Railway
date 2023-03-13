@@ -96,7 +96,10 @@ public class Wagon : MonoBehaviour
         }
 
         m_CurrentRail.OnMoveUpdate(this, m_CurrentConnection, m_CurrentMoveTime / m_MoveDeltaTime);
-        Transform.position = m_CurrentConnection.m_PathCreator.path.GetPointAtTime(m_CurrentMoveTime / m_MoveDeltaTime, PathCreation.EndOfPathInstruction.Stop);
+        Vector3 newPostion = m_CurrentConnection.m_PathCreator.path.GetPointAtTime(m_CurrentMoveTime / m_MoveDeltaTime, PathCreation.EndOfPathInstruction.Stop);
+        newPostion.y = Transform.position.y;
+        Transform.position = newPostion;
+
         Transform.rotation = Quaternion.LookRotation(m_CurrentConnection.m_PathCreator.path.GetDirection(m_CurrentMoveTime / m_MoveDeltaTime, PathCreation.EndOfPathInstruction.Stop));
     }
     private void UpdateNextRail()

@@ -9,21 +9,37 @@ public class DestructibleRail : BasicRail
         List<Cell> cells = new List<Cell>();
         List<int> code = ConnectionCode.GetCurrentConnectionCode(Transform);
 
-        if (code.Contains(1) && CellManager.Instance.GetCell(Coordinates.x - 1, Coordinates.y) != null)
+        if (code.Contains(1))
         {
-            cells.Add(CellManager.Instance.GetCell(Coordinates.x - 1, Coordinates.y));
+            Cell tempCell = CellManager.Instance.GetCell(Coordinates.x - 1, Coordinates.y);
+            if (tempCell != null && tempCell.Entity != null && tempCell.Entity.ConnectionCode.GetCurrentConnectionCode(tempCell.Entity.Transform).Contains(3))
+            {
+                cells.Add(tempCell);
+            }
         }
-        if (code.Contains(2) && CellManager.Instance.GetCell(Coordinates.x, Coordinates.y + 1) != null)
+        if (code.Contains(2))
         {
-            cells.Add(CellManager.Instance.GetCell(Coordinates.x, Coordinates.y + 1));
+            Cell tempCell = CellManager.Instance.GetCell(Coordinates.x, Coordinates.y + 1);
+            if (tempCell != null && tempCell.Entity != null && tempCell.Entity.ConnectionCode.GetCurrentConnectionCode(tempCell.Entity.Transform).Contains(4))
+            {
+                cells.Add(tempCell);
+            }
         }
-        if (code.Contains(3) && CellManager.Instance.GetCell(Coordinates.x + 1, Coordinates.y) != null)
+        if (code.Contains(3))
         {
-            cells.Add(CellManager.Instance.GetCell(Coordinates.x + 1, Coordinates.y));
+            Cell tempCell = CellManager.Instance.GetCell(Coordinates.x + 1, Coordinates.y);
+            if (tempCell != null && tempCell.Entity != null && tempCell.Entity.ConnectionCode.GetCurrentConnectionCode(tempCell.Entity.Transform).Contains(1))
+            {
+                cells.Add(tempCell);
+            }
         }
-        if (code.Contains(4) && CellManager.Instance.GetCell(Coordinates.x, Coordinates.y - 1) != null)
+        if (code.Contains(4))
         {
-            cells.Add(CellManager.Instance.GetCell(Coordinates.x, Coordinates.y - 1));
+            Cell tempCell = CellManager.Instance.GetCell(Coordinates.x, Coordinates.y - 1);
+            if (tempCell != null && tempCell.Entity != null && tempCell.Entity.ConnectionCode.GetCurrentConnectionCode(tempCell.Entity.Transform).Contains(2))
+            {
+                cells.Add(tempCell);
+            }
         }
 
         return cells;

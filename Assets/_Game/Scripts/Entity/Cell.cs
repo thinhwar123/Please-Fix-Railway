@@ -14,11 +14,24 @@ public class Cell : MonoBehaviour
 
     [SerializeField] private Coordinates m_Coordinates;
     [SerializeField] private Entity m_Entity;
+    [SerializeField] private bool m_CanDrawEntity;
 
+    [SerializeField] private GameObject m_DrawTile;
+    [SerializeField] private GameObject m_UnDrawTile;
 
 
     public Coordinates Coordinates { get => m_Coordinates ??= new Coordinates(); }
     public Entity Entity { get => m_Entity; }
+    public bool CanDrawEntity { get => m_CanDrawEntity; set => m_CanDrawEntity = value; }
+
+    public void SetCanDrawEntity(bool value)
+    {
+        CanDrawEntity = value;
+        m_BoxCollider.enabled = value;
+        // TODO: Change model of ground
+        m_DrawTile.SetActive(value);
+        m_UnDrawTile.SetActive(!value);
+    }
 
     public void Register(Entity entity)
     {
@@ -57,7 +70,7 @@ public class Cell : MonoBehaviour
         if (entity == null) return;
         Register(entity);
         entity.OnSpawn();
-        entity.Transform.SetParent(CellManager.Instance.EntityTransform);
+        entity.Transform.SetParent(Transform);
         entity.Transform.position = Transform.position + m_EntityOffset;
         entity.Transform.eulerAngles = new Vector3(0, 90 * rotateTime, 0);
         entity.Coordinates = Coordinates;
@@ -71,7 +84,7 @@ public class Cell : MonoBehaviour
         if (entity == null) return;
         Register(entity);
         entity.OnReplace();
-        entity.Transform.SetParent(CellManager.Instance.EntityTransform);
+        entity.Transform.SetParent(Transform);
         entity.Transform.position = Transform.position + m_EntityOffset;
         entity.Transform.eulerAngles = new Vector3(0, 90 * rotateTime, 0);
         entity.Coordinates = Coordinates;

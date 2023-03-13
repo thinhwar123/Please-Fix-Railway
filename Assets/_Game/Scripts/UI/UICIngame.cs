@@ -16,13 +16,14 @@ public class UICIngame : UICanvas
     private void Awake()
     {
         m_ChangeModifyButton.m_OnClick.AddListener(OnSwitchModify);
-    }
-    public override void Open()
-    {
-        base.Open();
-        m_TextRailCount.text = GameManager.Instance.CurrentRailCount.ToString();
         m_NextLevelButton.onClick.AddListener(OnClickNextLevelButton);
-        m_ChangeModifyButton.Setup(true);
+        m_BackLevelButton.onClick.AddListener(OnClickBackLevelButton);
+        m_PlayButton.onClick.AddListener(OnClickPlayButton);
+    }
+    public void Setup(bool modifyMode)
+    {
+        m_TextRailCount.text = GameManager.Instance.CurrentRailCount.ToString();
+        m_ChangeModifyButton.Setup(modifyMode);
     }
     public void OnSwitchModify(bool canAdd)
     {
@@ -38,5 +39,23 @@ public class UICIngame : UICanvas
     public void OnClickNextLevelButton()
     {
         GameManager.Instance.LoadNextLevel();
+    }
+    public void OnClickBackLevelButton()
+    {
+        GameManager.Instance.LoadBackLevel();
+    }
+    public void OnClickPlayButton()
+    {
+        for (int i = 0; i < CellManager.Instance.CurrentHeight; i++)
+        {
+            for (int j = 0; j < CellManager.Instance.CurrentWidth; j++)
+            {
+                if (CellManager.Instance.GetCell(j, i).Entity == null) continue;
+                if (CellManager.Instance.GetCell(j, i).Entity is CarRail)
+                {
+                    (CellManager.Instance.GetCell(j, i).Entity as CarRail).m_Wagon.Run();
+                }
+            }
+        }
     }
 }

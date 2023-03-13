@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
+using System;
 namespace MyExtension
 {
-    public class Extension
+    public static class Extension
     {
         public static bool m_IsTouchingUI;
         public static bool IsPointerOverUIGameObject()
@@ -31,17 +31,14 @@ namespace MyExtension
 
             return m_IsTouchingUI;
         }
-        public static class TimeSpanExtension
+        public static string ToStringReadable(this TimeSpan timeSpan)
         {
-            public static string ToStringReadable(this TimeSpan timeSpan)
-            {
-                if (timeSpan.TotalSeconds < 1) return "0s";
-                return string.Format("{0}{1}{2}{3}",
-                    timeSpan.Days > 0 ? $"{timeSpan.Days}d " : "",
-                    timeSpan.Hours > 0 ? $"{timeSpan.Hours}h " : "",
-                    timeSpan.Minutes > 0 ? $"{timeSpan.Minutes}m " : "",
-                    timeSpan.Seconds > 0 ? $"{timeSpan.Seconds}s " : "");
-            }
+            if (timeSpan.TotalSeconds < 1) return "0s";
+            return string.Format("{0}{1}{2}{3}",
+                timeSpan.Days > 0 ? $"{timeSpan.Days}d " : "",
+                timeSpan.Hours > 0 ? $"{timeSpan.Hours}h " : "",
+                timeSpan.Minutes > 0 ? $"{timeSpan.Minutes}m " : "",
+                timeSpan.Seconds > 0 ? $"{timeSpan.Seconds}s " : "");
         }
     } 
 }
