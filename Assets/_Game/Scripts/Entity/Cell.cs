@@ -9,9 +9,12 @@ public class Cell : MonoBehaviour
 {
     private Transform m_Transform;
     public Transform Transform { get => m_Transform ??= transform; }
+    [SerializeField] private BoxCollider m_BoxCollider;
     [SerializeField] private Vector3 m_EntityOffset;
+
     [SerializeField] private Coordinates m_Coordinates;
     [SerializeField] private Entity m_Entity;
+
 
 
     public Coordinates Coordinates { get => m_Coordinates ??= new Coordinates(); }

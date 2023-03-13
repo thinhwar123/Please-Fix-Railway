@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8960,6 +8960,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1926427688}
   - component: {fileID: 1926427689}
+  - component: {fileID: 1926427691}
+  - component: {fileID: 1926427690}
   m_Layer: 0
   m_Name: UICIngame
   m_TagString: Untagged
@@ -8999,6 +9001,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9df20bb850886db4087e24444576334c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsDestroyOnClose: 0
+  m_ChangeModifyButton: {fileID: 0}
+  m_TextRailCount: {fileID: 0}
+  m_NextLevelButton: {fileID: 0}
+  m_BackLevelButton: {fileID: 0}
+  m_PlayButton: {fileID: 0}
+  m_MapButton: {fileID: 0}
+--- !u!114 &1926427690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1926427687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 503
+--- !u!223 &1926427691
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1926427687}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!4 &1932846191 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 917314409261082299, guid: 6c37352cab5e5614ebb65a63dc47cfbf, type: 3}

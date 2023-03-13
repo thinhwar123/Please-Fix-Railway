@@ -21,6 +21,7 @@ public class UICIngame : UICanvas
     {
         base.Open();
         m_TextRailCount.text = GameManager.Instance.CurrentRailCount.ToString();
+        m_NextLevelButton.onClick.AddListener(OnClickNextLevelButton);
         m_ChangeModifyButton.Setup(true);
     }
     public void OnSwitchModify(bool canAdd)
@@ -33,5 +34,9 @@ public class UICIngame : UICanvas
         {
             GameInputHandler.Instance.ChangeEntityModifyMode(GameInputHandler.EntityModifyMode.Remove);
         }
+    }
+    public void OnClickNextLevelButton()
+    {
+        GameManager.Instance.LoadNextLevel();
     }
 }

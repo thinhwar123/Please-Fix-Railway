@@ -549,6 +549,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c98e1410cba1a1b4e8331e198b51ecfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_BoxCollider: {fileID: 1228713618139273058}
   m_EntityOffset: {x: 0, y: 0.25, z: 0}
   m_Coordinates:
     x: 0
