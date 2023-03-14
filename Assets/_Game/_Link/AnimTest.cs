@@ -102,7 +102,7 @@ public class AnimTest : MonoBehaviour
     [Button]
     public void StartAnim_3()
     {
-        startPoint = cells[4, 4].TF.position;
+        startPoint = cells[4, 4].Transform.position;
         action = (i) => dict[neiboors[i]].OnActive_1();
         speed = 12;
         ActiveWave();
@@ -127,7 +127,7 @@ public class AnimTest : MonoBehaviour
     [Button]
     public void StartAnim_5()
     {
-        startPoint = cells[4, 4].TF.position;
+        startPoint = cells[4, 4].Transform.position;
         action = (i) => dict[neiboors[i]].OnActive_1();
         speed = 12;
         ActiveWave();
