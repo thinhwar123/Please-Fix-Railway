@@ -11,6 +11,8 @@ public class Cell : MonoBehaviour
     public Transform Transform { get => m_Transform ??= transform; }
     [SerializeField] private BoxCollider m_BoxCollider;
     [SerializeField] private Vector3 m_EntityOffset;
+    public Vector3 WorldPosition { get => transform.position; set => transform.position = value; }
+    public Quaternion Rotation { get => transform.rotation; set => transform.rotation = value; }
 
     [SerializeField] private Coordinates m_Coordinates;
     [SerializeField] private Entity m_Entity;
