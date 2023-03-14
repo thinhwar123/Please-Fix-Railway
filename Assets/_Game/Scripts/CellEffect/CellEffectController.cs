@@ -190,38 +190,49 @@ public class CellEffectController : Singleton<CellEffectController>
     [Button("Play Effect 01")]
     private void PlayRowEffect01()
     {
-        for (int i = 0; i < rows.Count; i++)
+        for (int i = 0; i < rowCellMatrix.Count; i++)
         {
-            GameObject row = rows[i];
-            Vector3 startPosition = GetRowStartPosition(row);
             if (i % 2 == 0)
             {
-                row.transform.DOMoveX(xMoveEffect01, tweenEffect01Duration).SetEase(easeEffect01)
-                    .OnComplete(() =>
+                for (int j = 0; j < rowCellMatrix[i].Count; j++)
+                {
+                    if (i == rowCellMatrix.Count - 2 && j == rowCellMatrix[i].Count - 1)
                     {
-                        row.transform.DOMoveX(startPosition.x, tweenEffect01Duration).SetEase(easeEffect01);
-                    });
+                        Cell cell = rowCellMatrix[i][j];
+                        cell.Transform.DOMoveX(xMoveEffect01, tweenEffect01Duration).SetEase(easeEffect01)
+                            .OnComplete(() =>
+                            {
+                                for (int i = 0; i < cells.Count; i++)
+                                {
+                                    //TODO: Change cell
+                                }
+                                cell.Transform.DOMoveX(GetCellStartPosition(cell).x, tweenEffect01Duration).SetEase(easeEffect01);
+                            });
+                    }
+                    else
+                    {
+                        Cell cell = rowCellMatrix[i][j];
+                        cell.Transform.DOMoveX(xMoveEffect01, tweenEffect01Duration).SetEase(easeEffect01)
+                            .OnComplete(() =>
+                            {
+                                cell.Transform.DOMoveX(GetCellStartPosition(cell).x, tweenEffect01Duration).SetEase(easeEffect01);
+                            }); 
+                    }
+                }
             }
             else
             {
-                if (i == rows.Count - 1)
+                for (int j = 0; j < rowCellMatrix[i].Count; j++)
                 {
-                    row.transform.DOMoveX(-xMoveEffect01, tweenEffect01Duration).SetEase(easeEffect01).
-                        OnComplete(() =>
-                        { 
-                            //TODO: Change cell
-                            row.transform.DOMoveX(startPosition.x, tweenEffect01Duration).SetEase(easeEffect01);
+                    Cell cell = rowCellMatrix[i][j];
+                    cell.Transform.DOMoveX(-xMoveEffect01, tweenEffect01Duration).SetEase(easeEffect01)
+                        .OnComplete(() =>
+                        {
+                            cell.Transform.DOMoveX(GetCellStartPosition(cell).x, tweenEffect01Duration).SetEase(easeEffect01);
                         });
                 }
-                else
-                {
-                    row.transform.DOMoveX(-xMoveEffect01, tweenEffect01Duration).SetEase(easeEffect01)
-                        .OnComplete(() =>
-                    {
-                        row.transform.DOMoveX(startPosition.x, tweenEffect01Duration).SetEase(easeEffect01);
-                    });
-                }             
             }
+            
         }
     }
     #endregion
