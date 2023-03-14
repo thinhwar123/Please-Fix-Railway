@@ -109,7 +109,7 @@ public class LevelCreatorInputHandle : Singleton<LevelCreatorInputHandle>
                 {
                     CreateDemoSpawnObject(m_EntityType);
 
-                    m_DemoSpawnObject.transform.position = hitCell.collider.transform.position;
+                    m_DemoSpawnObject.transform.position = hitCell.collider.transform.position + Vector3.up * 0.25f;
 
                     if (Input.GetKeyDown(KeyCode.Q))
                     {
@@ -128,10 +128,11 @@ public class LevelCreatorInputHandle : Singleton<LevelCreatorInputHandle>
                 }
             }
 
-            m_StateTileObject.transform.position = hitCell.collider.transform.position;
+            m_StateTileObject.transform.position = hitCell.collider.transform.position + Vector3.up * 0.25f;
         }
         else
         {
+  
             CreateDemoSpawnObject(EntityType.Null);
             CreateStateObject(CreateEntityState.Null);
         }
@@ -240,9 +241,10 @@ public class LevelCreatorInputHandle : Singleton<LevelCreatorInputHandle>
 
                 m_DemoSpawnObject.Transform.localEulerAngles = m_CurrentRotate;
                 m_DemoSpawnObject.gameObject.layer = LayerMask.NameToLayer("Default");
-                for (int i = 0; i < m_DemoSpawnObject.transform.childCount; i++)
+                Transform[] transformList = m_DemoSpawnObject.GetComponentsInChildren<Transform>();
+                for (int i = 0; i < transformList.Length; i++)
                 {
-                    m_DemoSpawnObject.Transform.GetChild(i).gameObject.layer = LayerMask.NameToLayer("Default");
+                    transformList[i].gameObject.layer = LayerMask.NameToLayer("Default");
                 }
             }
         }

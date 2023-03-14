@@ -10044,6 +10044,8 @@ MonoBehaviour:
   - {fileID: 530641624}
   m_CurrentWidth: 0
   m_CurrentHeight: 0
+  m_OffsetWidth: 0
+  m_OffsetHeight: 0
 --- !u!1 &1481166341
 GameObject:
   m_ObjectHideFlags: 0
@@ -13564,7 +13566,7 @@ MonoBehaviour:
     m_Bits: 64
   m_WhatIsEntity:
     serializedVersion: 2
-    m_Bits: 384
+    m_Bits: 128
   m_CurrentRotate: {x: 0, y: 0, z: 0}
   m_DemoSpawnObject: {fileID: 0}
   m_StateTileObject: {fileID: 0}

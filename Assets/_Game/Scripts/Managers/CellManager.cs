@@ -39,8 +39,8 @@ public class CellManager : Singleton<CellManager>
         {
             for (int j = 0; j < 10; j++)
             {
-                //m_CellList[j + i * 10].SetCanDrawEntity(m_OffsetHeight <= i && i < height + m_OffsetHeight && m_OffsetWidth <= j && j < m_OffsetWidth + width);
-                m_CellList[j + i * 10].SetCanDrawEntity(i < height && j < width);
+                m_CellList[j + i * 10].SetCanDrawEntity(m_OffsetHeight <= i && i < height + m_OffsetHeight && m_OffsetWidth <= j && j < m_OffsetWidth + width);
+                //m_CellList[j + i * 10].SetCanDrawEntity(i < height && j < width);
             }
         }
     }
